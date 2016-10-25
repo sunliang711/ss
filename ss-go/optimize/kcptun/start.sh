@@ -6,7 +6,9 @@ if ps aux | grep -v grep | grep -q server_linux_amd64;then
 	exit 1
 fi
 
-cd /root/ss-go/kcptun/core
+fullpath="$(pwd)/$0"
+cd $(dirname $fullpath)
+cd core
 ./server_linux_amd64 -c config.json >kcptun.log 2>&1 &
 if ps aux | grep -v grep | grep -q server_linux_amd64;then
 	echo "kcptun server started."
