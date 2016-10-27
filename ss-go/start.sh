@@ -10,7 +10,7 @@ fullpath="$(pwd)/$0"
 #cd 到本脚本所在的目录
 cd $(dirname $fullpath)
 cd core
-./${prgname} >/dev/null 2>&1 &
+./${prgname} >../log 2>&1 &
 if ps aux | grep -v grep | grep  ${prgname};then
     echo "OK: ${prgname} has started"
 else
