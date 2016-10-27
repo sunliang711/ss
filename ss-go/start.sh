@@ -1,5 +1,7 @@
 #!/bin/bash
-source common.sh
+#cd 到本脚本所在的目录
+prgname=shadowsocks-server-linux64-1.1.5
+#prgname=max_server
 ulimit -n 51200
 
 if ps aux | grep -v grep | grep  ${prgname};then
@@ -7,7 +9,6 @@ if ps aux | grep -v grep | grep  ${prgname};then
     exit 1
 fi
 fullpath="$(pwd)/$0"
-#cd 到本脚本所在的目录
 cd $(dirname $fullpath)
 cd core
 ./${prgname} >../log 2>&1 &
