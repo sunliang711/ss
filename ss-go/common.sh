@@ -1,0 +1,1 @@
+prgname=max_server
