@@ -5,7 +5,7 @@
     "mode": "fast2",
     "mtu": 1300,
     "nocomp":false,
-    "sndwnd": 2048,
-    "rcvwnd": 1024
+    "sndwnd": 1024,
+    "rcvwnd": 512
 }
 

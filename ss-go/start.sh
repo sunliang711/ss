@@ -11,7 +11,7 @@ fi
 fullpath="$(pwd)/$0"
 cd $(dirname $fullpath)
 cd core
-./${prgname} >../log 2>&1 &
+./${prgname} > /dev/null  2>&1 &
 if ps aux | grep -v grep | grep  ${prgname};then
     echo "OK: ${prgname} has started"
 else
