@@ -22,3 +22,8 @@ cp kcptun "$ROOT"
 if ! grep -q "kcptun start" /etc/rc.local;then
     sed -i "/^exit 0/i$ROOT/kcptun start" /etc/rc.local
 fi
+
+#add alias for kcptun
+if ! grep -q "alias kcptun" ~/.bashrc;then
+    echo "alias kcptun='/kcptun/kcptun'" >> ~/.bashrc
+fi
