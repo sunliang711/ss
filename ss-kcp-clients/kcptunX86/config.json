@@ -1,11 +1,11 @@
 {
-	"localaddr":":124",
-	"remoteaddr":"45.32.66.165:1240",
-	"key":"test",      
-	"mode":"fast3",    
-	"mtu" :950,    
-	"sndwnd":256,   
-	"rcvwnd":2048,
-	"dscp":46,    
-	"nocomp":false  
+    "localaddr":":124",
+    "remoteaddr":"45.32.66.165:1240",
+    "key":"test",
+    "mode":"fast3",
+    "mtu" :1350,
+    "sndwnd":256,
+    "rcvwnd":2048,
+    "dscp":46,
+    "nocomp":false
 }
