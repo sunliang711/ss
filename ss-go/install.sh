@@ -22,6 +22,12 @@ mkdir -pv "$ROOT"
 cd "$realpath"
 cp core/shadowsocks-server-linux64* "$ROOT"
 cp core/config.json "$ROOT"
-cp ss-go.sh "$ROOT"
+cp ss-go "$ROOT"
 
-ln -sf "$ROOT/ss-go.sh" /etc/init.d/ss-go.sh
+#ln -sf "$ROOT/ss-go.sh" /etc/init.d/ss-go.sh
+#ln -sf /etc/init.d/ss-go.sh /etc/rc3.d/S03ss-go.sh
+#ln -sf /etc/init.d/ss-go.sh /etc/rc5.d/S03ss-go.sh
+
+if ! grep -q "ss-go start" /etc/rc.local;then
+    sed -i "/^exit 0/i$ROOT/ss-go start" /etc/rc.local
+fi

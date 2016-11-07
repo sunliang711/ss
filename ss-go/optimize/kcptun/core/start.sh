@@ -8,7 +8,6 @@ fi
 
 fullpath="$(pwd)/$0"
 cd $(dirname $fullpath)
-cd core
 ./server_linux_amd64 -c config.json >/dev/null 2>&1 &
 if ps aux | grep -v grep | grep -q server_linux_amd64;then
 	echo "kcptun server started."
