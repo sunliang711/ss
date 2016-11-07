@@ -15,7 +15,7 @@ start(){
         echo "Warning: ${prgname} is already running,quit"
         exit 1
     fi
-    ./${prgname} > /dev/null  2>&1 &
+    ./${prgname} -c config.json > /dev/null  2>&1 &
     if ps aux | grep -v grep | grep -q  ${prgname};then
         echo "OK: ${prgname} has started"
     else
