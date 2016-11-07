@@ -5,6 +5,7 @@ ROOT=/ss-go
 cd "$ROOT"
 prgname=$(ls shadowsocks-server*)
 echo "shadowsocks app name is: $prgname"
+echo "shadowsocks config file is: $ROOT/config.json"
 start(){
     ulimit -n 51200
     if [ -z "$prgname" ];then
@@ -23,31 +24,38 @@ start(){
     fi
 }
 stop(){
-pid=`ps -ef | grep ${prgname} | grep -v grep | awk '{print $2}'`
-if [[ "$pid" != ""  ]];then
-    echo "Stoping ${prgname} with pid: $pid"
-    kill -9 $pid
-    echo "Stoped!"
-else
-    echo "Warning:${prgname} is not running!"
-    echo "Exit!"
-fi
+    pid=`ps -ef | grep ${prgname} | grep -v grep | awk '{print $2}'`
+    if [[ "$pid" != ""  ]];then
+        echo "Stoping ${prgname} with pid: $pid"
+        kill -9 $pid
+        echo "Stoped!"
+    else
+        echo "Warning:${prgname} is not running!"
+        echo "Exit!"
+    fi
 }
 restart(){
     stop
     start
 }
 status(){
-pid=`ps -ef | grep ${prgname} | grep -v grep | awk '{print $2}'`
-if [ -n $pid ];then
-    echo "$prgname is running with pid: $pid"
-else
-    echo "$prgname is not running"
-fi
+    pid=`ps -ef | grep ${prgname} | grep -v grep | awk '{print $2}'`
+    if [ -n $pid ];then
+        echo "$prgname is running with pid: $pid"
+    else
+        echo "$prgname is not running"
+    fi
+}
+config(){
+    editor="vi"
+    if command -v vim >/dev/null 2>&1;then
+        editor="vim"
+    fi
+    "$editor" "$ROOT/config.json"
 }
 
 usage(){
-    echo "Usage: $0 {start|stop|status|restart}">&2
+    echo "Usage: $0 {start|stop|status|restart|config}">&2
     exit 1
 }
 
@@ -57,12 +65,15 @@ case "$1" in
         ;;
     stop)
         stop
-	;;
+        ;;
     status)
         status
         ;;
     restart)
         restart
+        ;;
+    config)
+        config
         ;;
     *)
         usage
