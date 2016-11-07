@@ -2,19 +2,21 @@
 ROOT=/kcptun
 cd "$ROOT"
 prgname=$(ls server_linux*)
+echo "---------------------------------------------------"
 echo "kcptun app name is: $ROOT/$prgname"
 echo "kcptun config file is :$ROOT/config.json"
+echo "---------------------------------------------------"
 start(){
     if [ -z "$prgname" ];then
-        echo "kcptun server not found in $ROOT">&2 
+        echo "kcptun server app not found in $ROOT">&2 
         exit 1
     fi
-    if ps aux | grep -v grep | grep  ${prgname};then
-        echo "Warning: ${prgname} is already running"
+    if ps aux | grep -v grep | grep -q ${prgname};then
+        echo "Warning: ${prgname} is already running,quit"
         exit 1
     fi
     ./${prgname} > /dev/null  2>&1 &
-    if ps aux | grep -v grep | grep  ${prgname};then
+    if ps aux | grep -v grep | grep -q  ${prgname};then
         echo "OK: ${prgname} has started"
     else
         echo "Failed: ${prgname} start failed!"
@@ -23,12 +25,16 @@ start(){
 stop(){
     pid=`ps -ef | grep ${prgname} | grep -v grep | awk '{print $2}'`
     if [[ "$pid" != ""  ]];then
-        echo "Stoping ${prgname} with pid: $pid"
+        echo -n "Found ${prgname} with pid: $pid,try to kill it ... "
         kill -9 $pid
-        echo "Stoped!"
+        pid=`ps -ef | grep ${prgname} | grep -v grep | awk '{print $2}'`
+        if [[ -z "$pid" ]];then
+            echo  "[OK]"
+        else
+            echo  "[Failed]"
+        fi
     else
-        echo "Warning:${prgname} is not running!"
-        echo "Exit!"
+        echo "Warning:${prgname} is not running,quit"
     fi
 }
 restart(){

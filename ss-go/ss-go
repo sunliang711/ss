@@ -4,20 +4,22 @@
 ROOT=/ss-go
 cd "$ROOT"
 prgname=$(ls shadowsocks-server*)
-echo "shadowsocks app name is: $prgname"
+echo "---------------------------------------------------------------"
+echo "shadowsocks app name is: $ROOT/$prgname"
 echo "shadowsocks config file is: $ROOT/config.json"
+echo "---------------------------------------------------------------"
 start(){
     ulimit -n 51200
     if [ -z "$prgname" ];then
         echo "shadowsocks-server not found in $ROOT">&2 
         exit 1
     fi
-    if ps aux | grep -v grep | grep  ${prgname};then
+    if ps aux | grep -v grep | grep -q  ${prgname};then
         echo "Warning: ${prgname} is already running"
         exit 1
     fi
     ./${prgname} > /dev/null  2>&1 &
-    if ps aux | grep -v grep | grep  ${prgname};then
+    if ps aux | grep -v grep | grep -q  ${prgname};then
         echo "OK: ${prgname} has started"
     else
         echo "Failed: ${prgname} start failed!"
@@ -26,12 +28,16 @@ start(){
 stop(){
     pid=`ps -ef | grep ${prgname} | grep -v grep | awk '{print $2}'`
     if [[ "$pid" != ""  ]];then
-        echo "Stoping ${prgname} with pid: $pid"
+        echo -n "Found ${prgname} with pid: $pid,try to kill it ... "
         kill -9 $pid
-        echo "Stoped!"
+        pid=`ps -ef | grep ${prgname} | grep -v grep | awk '{print $2}'`
+        if [ -z "$pid" ];then
+            echo "[OK]"
+        else
+            echo "[Failed]"
+        fi
     else
         echo "Warning:${prgname} is not running!"
-        echo "Exit!"
     fi
 }
 restart(){
