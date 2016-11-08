@@ -94,6 +94,7 @@ case "$1" in
         ;;
     config)
         config
+        restart
         ;;
     uninstall)
         stop
