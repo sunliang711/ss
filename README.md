@@ -3,8 +3,10 @@ kcp-server:一键安装ss和kcp合成版服务端
 
 ss-go:shadowsocks golang版本，里面有锐速加速，更换内核，优化ss等;
 一键安装ss-go和kcptun的命令：
+```
 if [ -d /tmp/ss ];then rm -rf /tmp/ss;fi && cd /tmp && git clone https://github.com/sunliang711/ss.git && cd ss/ss-go && bash install.sh &&
 cd optimize/kcptun && bash install.sh && reboot
+```
 
 重启之后就可以使用：
 ```
