@@ -31,5 +31,5 @@ fi
 
 #add alias for ss-go
 if ! grep -q "alias ss-go" ~/.bashrc;then
-    echo "alias ss-go='/ss-go/ss-go'">>~/.bashrc
+    echo "alias ss-go=\"$ROOT/ss-go\"">>~/.bashrc
 fi

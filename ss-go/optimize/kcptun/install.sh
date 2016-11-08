@@ -25,5 +25,5 @@ fi
 
 #add alias for kcptun
 if ! grep -q "alias kcptun" ~/.bashrc;then
-    echo "alias kcptun='/kcptun/kcptun'" >> ~/.bashrc
+    echo "alias kcptun=\"$ROOT/kcptun\"" >> ~/.bashrc
 fi
