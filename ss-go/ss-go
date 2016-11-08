@@ -65,6 +65,20 @@ usage(){
     exit 1
 }
 
+uninstall(){
+    if [ -d "$ROOT" ];then
+        rm -rf "$ROOT"
+    fi
+
+    if grep -q "ss-go start" /etc/rc.local;then
+        sed -i "/ss-go start/d" /etc/rc.local
+    fi
+
+    if grep -q "alias ss-go" ~/.bashrc;then
+        sed -i "/alias ss-go/d" ~/.bashrc
+    fi
+}
+
 case "$1" in
     start)
         start
@@ -80,6 +94,10 @@ case "$1" in
         ;;
     config)
         config
+        ;;
+    uninstall)
+        stop
+        uninstall
         ;;
     *)
         usage

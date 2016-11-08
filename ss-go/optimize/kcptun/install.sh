@@ -6,6 +6,7 @@ fi
 
 ROOT=/kcptun
 if [ -d "$ROOT" ];then
+    $ROOT/kcptun stop
     rm -rf "$ROOT"
 fi
 mkdir -pv "$ROOT"
@@ -27,3 +28,6 @@ fi
 if ! grep -q "alias kcptun" ~/.bashrc;then
     echo "alias kcptun=\"$ROOT/kcptun\"" >> ~/.bashrc
 fi
+
+#start server
+"$ROOT/kcptun" start

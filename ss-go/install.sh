@@ -7,6 +7,7 @@ fi
 
 ROOT=/ss-go
 if [ -d "$ROOT" ];then
+    "$ROOT/ss-go" stop
     rm -rf "$ROOT"
 fi
 
@@ -33,3 +34,6 @@ fi
 if ! grep -q "alias ss-go" ~/.bashrc;then
     echo "alias ss-go=\"$ROOT/ss-go\"">>~/.bashrc
 fi
+
+#start server
+"$ROOT/ss-go" start
