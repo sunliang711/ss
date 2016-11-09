@@ -1,3 +1,9 @@
+#!/bin/bash
+if (($EUID!=0));then
+    echo "Need root priviledge"
+    exit 1
+fi
+
 sudo cp -v /etc/apt/sources.list{,.bak}
 
 cat >/etc/apt/sources.list<<EOF
