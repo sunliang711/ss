@@ -113,19 +113,20 @@ cat>"$ROOT"/firewall<<EOF
 :INPUT DROP [0:0]
 :FORWARD ACCEPT [0:0]
 :OUTPUT ACCEPT [0:0]
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 -A INPUT -i lo -j ACCEPT
--A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
 
 EOF
 
 ##custom rule
 echo '#SSH port' >>"$ROOT"/firewall
-echo "-A INPUT -p tcp -m tcp --dport 22 -j ACCEPT" >>"$ROOT"/firewall
+echo "-A INPUT -p tcp --dport 22 -j ACCEPT" >>"$ROOT"/firewall
 
 ##shadowsocks port from 'config.json'
 echo >>"$ROOT"/firewall
 echo '#Shadowsocks port' >>"$ROOT"/firewall
-grep -oP '(?<=")[0-9]+(?=":)' "$ROOT"/config.json |awk '{print "-A INPUT -p tcp -m tcp --dport "$0" -j ACCEPT"}' >>"$ROOT"/firewall
+grep -oP '(?<=")[0-9]+(?=":)' "$ROOT"/config.json |awk '{print "-A INPUT -p tcp --dport "$0" -j ACCEPT"}' >>"$ROOT"/firewall
 echo >>"$ROOT"/firewall
 
 if [ -f "$ROOT"/otherRule ];then
