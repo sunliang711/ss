@@ -12,8 +12,7 @@ echo "---------------------------------------------------------------"
 echo "shadowsocks app name is: $ROOT/$prgname"
 echo "shadowsocks config file is: $ROOT/config.json"
 echo "---------------------------------------------------------------"
-###TODO
-###使用pgrep pkill来管理start() stop()
+
 start(){
     ulimit -n 51200
     if [ -z "$prgname" ];then
@@ -82,12 +81,15 @@ config(){
     "$editor" "$ROOT/config.json"
     read -p "Update firewall? [Y/n]" fw
     if [[ "$fw" != [nN] ]];then
-        firewallOn
+        fwOn
     fi
 }
 
 usage(){
-    echo "Usage: $0 {start|stop|status|restart|config|firewallOn|firewallOff|uninstall}">&2
+    echo "Usage: $0 {start|stop|status|restart|config|fwOn|fwOff|uninstall}">&2
+    echo "        fwOn  for firewall on"
+    echo "        fwOff for firewall off"
+    echo "        config for port setting"
     exit 1
 }
 
@@ -105,7 +107,7 @@ uninstall(){
     fi
 }
 
-firewallOn(){
+fwOn(){
 #make firewall rule
 ##header
 cat>"$ROOT"/firewall<<EOF
@@ -150,7 +152,7 @@ fi
 iptables-restore <"$ROOT"/firewall
 }
 
-firewallOff(){
+fwOff(){
     iptables -F
     iptables -X
     iptables -Z
@@ -187,11 +189,11 @@ case "$1" in
         stop
         uninstall
         ;;
-    firewallOn)
-        firewallOn
+    fwOn)
+        fwOn
         ;;
-    firewallOff)
-        firewallOff
+    fwOff)
+        fwOff
         ;;
     uninstall)
         uninstall
