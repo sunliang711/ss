@@ -53,10 +53,10 @@ stop(){
     # fi
     if pgrep "${prgname:0:15}";then
         pkill "${prgname:0:15}"
+        status
     else
         echo "**Warning**${prgname} is not running!"
     fi
-    status
 }
 
 restart(){
