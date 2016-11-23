@@ -34,6 +34,7 @@ start(){
     # else
         # echo "Failed: ${prgname} start failed!"
     # fi
+    fwOn
 }
 
 stop(){
@@ -56,6 +57,7 @@ stop(){
     else
         echo "**Warning**${prgname} is not running!"
     fi
+    fwOff
 }
 
 restart(){
