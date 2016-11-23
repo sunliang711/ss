@@ -120,7 +120,7 @@ config(){
         editor="vim"
     fi
     "$editor" "$ROOT/config.json"
-    read -p "Update firewall? [Y/n]" fw
+    read -p "Update firewall? [Y/n]" -t 10 fw
     if [[ "$fw" != [nN] ]];then
         fwOn
     fi
@@ -184,7 +184,7 @@ editor=vi
 if command -v vim>/dev/null 2>&1;then
     editor=vim
 fi
-read -p "Edit firewall file (view or add custom rule)?[Y/n]" fw
+read -p "Edit firewall file (view or add custom rule)?[Y/n]"  -t 10 fw
 if [[ "$fw" != [nN] ]];then
     "$editor" "$ROOT"/firewall
     sed -n "/#otherRule begin/,/#otherRule end/w $ROOT/otherRule" "$ROOT"/firewall
