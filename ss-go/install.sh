@@ -17,6 +17,7 @@ realpath=$(dirname "$fullpath")
 
 #install shadowsocks
 mkdir -pv "$ROOT"
+#先cd到install.sh所在的目录然后再cp的目的是可以在其它路径通过相对路径或者绝对路径执行install.sh也可以，当然在本目录执行最好
 cd "$realpath"
 cp core/shadowsocks-server-linux64* "$ROOT"
 cp core/config.json "$ROOT"
