@@ -180,17 +180,21 @@ fi
 cat >>"$ROOT"/firewall<<EOF2
 COMMIT
 EOF2
+iptables-restore <"$ROOT"/firewall
+
 editor=vi
 if command -v vim>/dev/null 2>&1;then
     editor=vim
 fi
-read -p "Edit firewall file (view or add custom rule)?[Y/n]"  -t 10 fw
-if [[ "$fw" != [nN] ]];then
+read -p "Edit firewall file (view or add custom rule)?[y/N]"  -t 10 fw
+if [[ "$fw" != [yY] ]];then
+    exit 0
+else
     "$editor" "$ROOT"/firewall
     sed -n "/#otherRule begin/,/#otherRule end/w $ROOT/otherRule" "$ROOT"/firewall
+    iptables-restore <"$ROOT"/firewall
 fi
 
-iptables-restore <"$ROOT"/firewall
 }
 
 fwOff(){
