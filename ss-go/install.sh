@@ -23,6 +23,7 @@ cp core/shadowsocks-server-linux64* "$ROOT"
 cp core/config.json "$ROOT"
 cp core/otherRule "$ROOT"
 cp core/ss-go "$ROOT"
+cp core/max_server "$ROOT"
 
 #auto start on boot
 if [ ! -f /etc/rc.local ];then
