@@ -9,10 +9,10 @@ if ! command -v pacman>/dev/null 2>&1;then
     exit 1
 fi
 
-pacman -Syu --no-confirm
-pacman -S nginx-mainline --no-confirm
-pacman -S mariadb --no-confirm
-pacman -S php-fpm --no-confirm
+pacman -Syu --noconfirm
+pacman -S nginx-mainline --noconfirm --needed
+pacman -S mariadb --noconfirm --needed
+pacman -S php-fpm --noconfirm --needed
 
 mysql_install_db --user=mysql  --basedir=/usr --datadir=/var/lib/mysql
 systemctl start mysqld
@@ -31,6 +31,7 @@ y
 end
 EOF
 bash mysql_secure_installation.sh
+rm mysql_secure_installation.sh
 
 mv /etc/nginx/nginx.conf{,.bak}
 cp ./nginx.conf /etc/nginx/nginx.conf
