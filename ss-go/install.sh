@@ -4,26 +4,37 @@ if (($EUID!=0));then
     exit 1
 fi
 
-ROOT=/ss-go
-if [ -d "$ROOT" ];then
-    "$ROOT/ss-go" stop
-    rm -rf "$ROOT"
+exeDir=/usr/local/bin
+configDir=/etc/ss-go
+
+#如果已经安装了
+if [ -x "$exeDir/ss-go" ];then
+    read -p "shadowsocks server has already been installed,uninstall old one? [Y/n]" uninstall
+    if [[ "$uninstall" != [Nn] ]];then
+        "$exeDir/ss-go" uninstall
+    else
+        echo "bye!"
+        exit 1
+    fi
 fi
 
+# fullpath="$PWD/$0"
+# #get this file's path
+# realpath=$(dirname "$fullpath")
 
-fullpath="$PWD/$0"
-#get this file's path
-realpath=$(dirname "$fullpath")
+#创建配置文件目录
+mkdir -pv "$configDir"
 
-#install shadowsocks
-mkdir -pv "$ROOT"
-#先cd到install.sh所在的目录然后再cp的目的是可以在其它路径通过相对路径或者绝对路径执行install.sh也可以，当然在本目录执行最好
-cd "$realpath"
-cp core/shadowsocks-server-linux64* "$ROOT"
-cp core/config.json "$ROOT"
-cp core/otherRule "$ROOT"
-cp core/ss-go "$ROOT"
-cp core/max_server "$ROOT"
+#install
+for eachFile in core/*;do
+    if [[ -x "$eachFile" ]];then
+        echo "cp $eachFile -> $exeDir"
+        cp "$eachFile" "$exeDir"
+    else
+        echo "cp $eachFile -> $configDir"
+        cp "$eachFile" "$configDir"
+    fi
+done
 
 #auto start on boot
 if [ ! -f /etc/rc.local ];then
@@ -42,4 +53,4 @@ if ! grep -q "alias ss-go" ~/.bashrc;then
 fi
 
 #start server
-"$ROOT/ss-go" start
+"$exeDir/ss-go" start

@@ -1,143 +1,90 @@
 #!/bin/bash
-#. /etc/init.d/functions
-if (($EUID!=0));then
-    echo "Need root priviledge!" >&2
-    exit 1
-fi
 
-ROOT=/ss-go
-cd "$ROOT"
-prgname=$(ls shadowsocks-server*)
-echo "---------------------------------------------------------------"
-echo "shadowsocks app name is: $ROOT/$prgname"
-echo "shadowsocks config file is: $ROOT/config.json"
-echo "---------------------------------------------------------------"
+exeDir=/usr/local/bin
+configDir=/etc/ss-go
 
+help(){
+    echo "Usage: $0 COMMAND"
+    echo "COMMANDS:"
+    echo -e "\tstart          start shadowsocks server "
+    echo -e "\tstop           stop shadowsocks server"
+    echo -e "\trestart        restart shadowsocks server"
+    echo
+    echo -e "\tstatus         check shadowsocks server status"
+    echo
+    echo -e "\tconfig         edit config file"
+    echo
+    echo -e "\tfwOn           switch on firewall"
+    echo -e "\tfwOff          switch off firewall"
+}
+
+needRoot(){
+    if (($EUID!=0));then
+        echo "Need root privilidge!"
+        exit 1
+    fi
+}
 start(){
-    oneStop
-    ulimit -n 51200
+    needRoot
+    exeName=${1:-"ss-server"}
+    cfgName=${2:-"config.json"}
+    cd "$exeDir"
+    prgname=$(eval "\ls ${exeName}*")
+    #debug
+    echo "prgname is: $prgname"
     if [ -z "$prgname" ];then
-        echo "shadowsocks-server not found in $ROOT">&2 
-        exit 1
+        echo "Cannot find shadowsocks server,quit!"
+        return 1
     fi
+
     if ps aux | grep -v grep | grep -q  ${prgname};then
         echo "Warning: ${prgname} is already running"
-        exit 1
+        return 1
     fi
-    ./${prgname} > /dev/null  2>&1 &
-    if pgrep "${prgname:0:15}">/dev/null 2>&1;then
-        echo "OK: ${prgname} has started."
-    else
-        echo "Failed: ${prgname} start failed!"
-    fi
-    # if ps aux | grep -v grep | grep -q  ${prgname};then
-        # echo "OK: ${prgname} has started"
-    # else
-        # echo "Failed: ${prgname} start failed!"
-    # fi
-    fwOn
-}
-
-oneStart(){
-    stop
     ulimit -n 51200
-    prgname=$(ls max_server*)
-    if [ -z "$prgname" ];then
-        echo "shadowsocks-server not found in $ROOT">&2 
-        exit 1
-    fi
-    if ps aux | grep -v grep | grep -q  ${prgname};then
-        echo "Warning: ${prgname} is already running"
-        exit 1
-    fi
-    ./${prgname} > /dev/null  2>&1 &
-    if pgrep "${prgname:0:15}">/dev/null 2>&1;then
-        echo "OK: ${prgname} has started."
-    else
-        echo "Failed: ${prgname} start failed!"
-    fi
-    # if ps aux | grep -v grep | grep -q  ${prgname};then
-        # echo "OK: ${prgname} has started"
-    # else
-        # echo "Failed: ${prgname} start failed!"
-    # fi
-    fwOn
+    "$exeDir/${prgname}" -c "$configDir/$cfgName"> /dev/null  2>&1 &
 
-}
-
-oneStop(){
-    prgname=$(ls max_server*)
-    if pgrep "${prgname:0:15}";then
-        pkill "${prgname:0:15}"
-        status
-    else
-        echo "**Warning**${prgname} is not running!"
-    fi
-    fwOff
 }
 
 stop(){
-    # pid=`ps -ef | grep ${prgname} | grep -v grep | awk '{print $2}'`
-    # if [[ "$pid" != ""  ]];then
-    #     echo -n "Found ${prgname} with pid: $pid,try to kill it ... "
-    #     kill -9 $pid
-    #     pid=`ps -ef | grep ${prgname} | grep -v grep | awk '{print $2}'`
-    #     if [ -z "$pid" ];then
-    #         echo "[OK]"
-    #     else
-    #         echo "[Failed]"
-    #     fi
-    # else
-    #     echo "Warning:${prgname} is not running!"
-    # fi
-    if pgrep "${prgname:0:15}";then
-        pkill "${prgname:0:15}"
-        status
-    else
-        echo "**Warning**${prgname} is not running!"
-    fi
-    fwOff
-}
-
-restart(){
-    stop
-    start
+    needRoot
+    pkill ss-server
+    pkill max-server
 }
 
 status(){
     # pid=`ps -ef | grep ${prgname} | grep -v grep | awk '{print $2}'`
-    pid=`pgrep "${prgname:0:15}"`
-    if [ -n $pid ];then
-        echo "$prgname is running with pid: $pid."
-    else
-        echo "$prgname is not running."
+    pid=$(pgrep ss-server)
+    if [ -n "$pid" ];then
+        echo "ss-server is running with pid: $pid"
+    fi
+    pid=$(pgrep max-server)
+    if [ -n "$pid" ];then
+        echo "max-server is running with pid: $pid"
     fi
 }
 
 config(){
+    needRoot
     editor="vi"
     if command -v vim >/dev/null 2>&1;then
         editor="vim"
     fi
-    "$editor" "$ROOT/config.json"
+    "$editor" "$configDir/config.json" "$configDir/max-config.json"
+    echo "You need restart ss-server." 
     read -p "Update firewall? [Y/n]" -t 10 fw
     if [[ "$fw" != [nN] ]];then
         fwOn
     fi
 }
 
-usage(){
-    echo "Usage: $0 {start|stop|status|restart|config|fwOn|fwOff|uninstall|oneStart|oneStop}">&2
-    echo "        fwOn  for firewall on"
-    echo "        fwOff for firewall off"
-    echo "        config for port setting"
-    exit 1
-}
-
 uninstall(){
-    if [ -d "$ROOT" ];then
-        rm -rf "$ROOT"
-    fi
+    cd "$exeDir"
+    rm max-server*
+    rm ss-server*
+    rm ss-go
+
+    rm -rf "$configDir"
 
     if grep -q "ss-go start" /etc/rc.local;then
         sed -i "/ss-go start/d" /etc/rc.local
@@ -151,7 +98,7 @@ uninstall(){
 fwOn(){
 #make firewall rule
 ##header
-cat>"$ROOT"/firewall<<EOF
+cat>"$configDir"/firewall<<EOF
 *filter
 :INPUT DROP [0:0]
 :FORWARD ACCEPT [0:0]
@@ -163,24 +110,25 @@ cat>"$ROOT"/firewall<<EOF
 EOF
 
 ##custom rule
-echo '#SSH port' >>"$ROOT"/firewall
-echo "-A INPUT -p tcp --dport 22 -j ACCEPT" >>"$ROOT"/firewall
+echo '#SSH port' >>"$configDir"/firewall
+echo "-A INPUT -p tcp --dport 22 -j ACCEPT" >>"$configDir"/firewall
 
 ##shadowsocks port from 'config.json'
-echo >>"$ROOT"/firewall
-echo '#Shadowsocks port' >>"$ROOT"/firewall
-grep -oP '(?<=")[0-9]+(?=":)' "$ROOT"/config.json |awk '{print "-A INPUT -p tcp --dport "$0" -j ACCEPT"}' >>"$ROOT"/firewall
-echo >>"$ROOT"/firewall
+echo >>"$configDir"/firewall
+echo '#Shadowsocks port' >>"$configDir"/firewall
+grep -oP '(?<=")[0-9]+(?=":)' "$configDir"/config.json |awk '{print "-A INPUT -p tcp --dport "$0" -j ACCEPT"}' >>"$configDir"/firewall
+grep -oP '(?<=")[0-9]+(?=":)' "$configDir"/max-config.json |awk '{print "-A INPUT -p tcp --dport "$0" -j ACCEPT"}' >>"$configDir"/firewall
+echo >>"$configDir"/firewall
 
-if [ -f "$ROOT"/otherRule ];then
-    cat "$ROOT"/otherRule >> "$ROOT"/firewall
+if [ -f "$configDir"/otherRule ];then
+    cat "$configDir"/otherRule >> "$configDir"/firewall
 fi
 
 #footer
-cat >>"$ROOT"/firewall<<EOF2
+cat >>"$configDir"/firewall<<EOF2
 COMMIT
 EOF2
-iptables-restore <"$ROOT"/firewall
+iptables-restore <"$configDir"/firewall
 
 editor=vi
 if command -v vim>/dev/null 2>&1;then
@@ -190,9 +138,9 @@ read -p "Edit firewall file (view or add custom rule)?[y/N]"  -t 10 fw
 if [[ "$fw" != [yY] ]];then
     exit 0
 else
-    "$editor" "$ROOT"/firewall
-    sed -n "/#otherRule begin/,/#otherRule end/w $ROOT/otherRule" "$ROOT"/firewall
-    iptables-restore <"$ROOT"/firewall
+    "$editor" "$configDir"/firewall
+    sed -n "/#otherRule begin/,/#otherRule end/w $configDir/otherRule" "$configDir"/firewall
+    iptables-restore <"$configDir"/firewall
 fi
 
 }
@@ -205,30 +153,30 @@ fwOff(){
     iptables -P OUTPUT ACCEPT
     iptables -P FORWARD ACCEPT
 }
-uninstall(){
-    stop
-    rm -rf "$ROOT"
-    bashrc=$(ls /etc/*bashrc)
-    if grep -q "ss-go start" "$bashrc";then
-        sed -i '/ss-go start/d' "$bashrc"
-    fi
-}
+
 case "$1" in
     start)
         start
+        start max-server max-config.json
+        status
+        fwOn
         ;;
     stop)
         stop
+        status
+        fwOff
         ;;
     status)
         status
         ;;
     restart)
-        restart
+        stop
+        start
+        start max-server max-config.json
+        status
         ;;
     config)
         config
-        restart
         ;;
     uninstall)
         stop
@@ -240,16 +188,7 @@ case "$1" in
     fwOff)
         fwOff
         ;;
-    uninstall)
-        uninstall
-        ;;
-    oneStart)
-        oneStart
-        ;;
-    oneStop)
-        oneStop
-        ;;
     *)
-        usage
+        help
         ;;
 esac
