@@ -1,6 +1,6 @@
 #!/bin/bash
 if (($EUID!=0));then
-    echo "Need root priviledge!"
+    echo -e "Need $(tput setaf 1)root$(tput sgr0) priviledge!$(tput setaf 1)\u2717"
     exit 1
 fi
 

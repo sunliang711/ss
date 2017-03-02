@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if (($EUID!=0));then
-    echo "Need run as root"
+    echo -e "Need run as $(tput setaf 1)root \u2717"
     exit 1
 fi
 
