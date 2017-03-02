@@ -22,6 +22,7 @@ cd $GOPATH/src/$sspath
 echo "build shadowsocks-server..."
 go build
 cd -
-echo "cp $GOPATH/src/$sspath/shadowsocks-server ./core"
-cp $GOPATH/src/$sspath/shadowsocks-server ./core
+echo "cp $GOPATH/src/$sspath/shadowsocks-server ./core/ss-server"
+cp $GOPATH/src/$sspath/shadowsocks-server ./core/ss-server
 echo "Done."
+unset $GOPATH
