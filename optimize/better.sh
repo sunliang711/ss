@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if (($EUID!=0));then
+    echo "Need run as root"
+    exit 1
+fi
+
 cp -v /etc/security/limits.conf{,.bak}
 cat>>/etc/security/limits.conf<<EOF
 * soft nofile 51200
