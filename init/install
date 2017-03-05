@@ -17,24 +17,36 @@ case $(uname) in
         exit 1
 esac
 
+read -p "Install dev tools? [Y/n] " installDev
+read -p "Set proxy?(ie http_proxy https_proxy)[Y/n] " setProxy
+read -p "Set git? [Y/n] " setGit
+read -p "Set docker? [Y/n] " setDocker
+read -p "Set golang? [Y/n] " setGolang
+read -p "Set shell? [Y/n] " setShell
+read -p "Set service? [Y/n] " setService
+read -p "Set supervim? [Y/n] " setSupervim
 ##Install dev tools
-cd dev
-case "$OS" in
-    "Arch")
-        sudo /bin/bash dev-arch
-        ;;
-    "Fedora")
-        sudo /bin/bash dev-fedora
-        ;;
-    "Ubuntu")
-        sudo /bin/bash dev-ubuntu
-        ;;
-esac
-cd -
+if [[ "$installDev"!=[nN] ]];then
+    echo "Install dev tools..."
+    cd dev
+    case "$OS" in
+        "Arch")
+            sudo /bin/bash dev-arch
+            ;;
+        "Fedora")
+            sudo /bin/bash dev-fedora
+            ;;
+        "Ubuntu")
+            sudo /bin/bash dev-ubuntu
+            ;;
+    esac
+    cd -
+    echo "Done."
+fi
 
 ##Set proxy
-read -p "Set proxy?[Y/n]" setProxy
 if [[ "$setProxy"!=[nN] ]];then
+    echo "Set proxy..."
     if [ ! -e /usr/local/bin/ss-client ];then
         echo "Error: Can't find ss-client!"
         exit 1
@@ -49,43 +61,68 @@ if [[ "$setProxy"!=[nN] ]];then
         echo "Error ss-client start error: can not find listen port on 8118"
         exit 1
     fi
+    echo "Done."
 fi
 ##Set git
-cd git
-/bin/bash setGit
-cd -
+if [[ "$setGit"!=[nN]]];then
+    echo "Set git..."
+    cd git
+    /bin/bash setGit
+    cd -
+    echo "Done."
+fi
 
 ##Set docker
-cd docker
-case "$OS" in
-    "Arch")
-        /bin/bash docker-arch
-        ;;
-esac
-cd -
+if [[ "$setDocker"!=[nN] ]];then
+    echo "Set docker..."
+    cd docker
+    case "$OS" in
+        "Arch")
+            /bin/bash docker-arch
+            ;;
+    esac
+    cd -
+    echo "Done."
+fi
 
 ##Set golang
-cd golang
-/bin/bash setGolang
-cd -
+if [[ "$setGolang"!=[nN] ]];then
+    echo "Set golang..."
+    cd golang
+    /bin/bash setGolang
+    cd -
+    echo "Done."
+fi
 
 ##Set shell
-cd shell
-/bin/bash 10-zsh-installer.sh
-/bin/bash 20-set-zsh-theme.sh
-/bin/bash 30-config-shell.sh install
-cd -
+if [[ "$setShell"!=[nN] ]];then
+    echo "Set shell..."
+    cd shell
+    /bin/bash 10-zsh-installer.sh
+    /bin/bash 20-set-zsh-theme.sh
+    /bin/bash 30-config-shell.sh install
+    cd -
+    echo "Done."
+fi
 
 ##Service
-cd service
-case "$OS" in
-    "Arch")
-        /bin/bash arch-rc-local-service.sh
-        ;;
-esac
-cd -
+if [[ "$setService"!=[nN] ]];then
+    echo "Set service..."
+    cd service
+    case "$OS" in
+        "Arch")
+            /bin/bash arch-rc-local-service.sh
+            ;;
+    esac
+    cd -
+    echo "Done."
+fi
 
 ##Set vim
-cd supervim
-/bin/bash install.sh install
-cd -
+if [[ "$setSupervim"!=[nN] ]];then
+    echo "Set supervim..."
+    cd supervim
+    /bin/bash install.sh install
+    cd -
+    echo "Done."
+fi
