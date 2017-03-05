@@ -1,0 +1,31 @@
+#!/bin/bash
+if ! command -v dnf > /dev/null 2>&1;then
+    echo "Error: Not fedora!"
+    exit 1
+fi
+if [[ $EUID != 0 ]];then
+    echo "Error: Need root priviledge!"
+    exit 1
+fi
+
+#change grub timeout to 1 second
+sed -i 's/\(^GRUB_TIMEOUT=\)[0-9]\+/\11/' /etc/default/grub && grub2-mkconfig -o /boot/grub2/grub.cfg
+
+
+#TODO
+#设置fedora国内源
+
+#install development tools
+fedoraApps="kernel-devel vim clang python-devel python-pip python3-devel python3-pip cmake tree golang golang-godoc boost-devel ncurses-devel screenfetch"
+dnf update -y
+dnf groupinstall "development tools" -y
+for tool in ${fedoraApps};do
+    dnf install $tool -y
+done
+
+#parallels desktop
+read -p "Install parallels tools dependency?(Y/n)" pd
+if [[ "$pd" != [nN] ]];then
+    sudo dnf -y install dkms
+    sudo dnf -y install selinux-policy-devel
+fi

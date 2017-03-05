@@ -1,0 +1,230 @@
+#BEGIN mode
+set -o vi
+#END
+
+#BEGIN environment variable
+[ -d $HOME/Documents/go ] && export GOPATH=$HOME/Documents/go
+
+#export LS_COLORS=$LS_COLORS:"di=0;33:"
+#export PS1='[\u@\h \[\e[32;1m\]\W\\$\e[0m'
+#export PS1='\[\033[1;34m\]\u@\h\[\033[00m\]:\[\033[00;33m\]\W\[\033[00m\]\$ '
+
+if command -v clang >/dev/null 2>&1;then
+    export CC=$(command -v clang)
+
+fi
+if command -v clang++ >/dev/null 2>&1;then
+    export CXX=$(command -v clang++)
+fi
+
+#END environment variable
+
+
+#BEGIN alias
+case $(uname) in
+    "Linux")
+        alias lA='ls -aF --color=auto'
+        alias la='ls -AF --color=auto'
+        alias ll='ls -lF --color=auto'
+        alias l='ls -F --color=auto'
+        alias ls='ls -F --color=auto'
+        alias editcfg='vi ~/.bashrc'
+        ;;
+    "Darwin")
+        alias lA='ls -aFG'
+        alias la='ls -AFG'
+        alias ll='ls -lFG'
+        alias l='ls -FG'
+        alias ls='ls -FG'
+        alias editcfg='vi ~/.bash_profile'
+        export PATH=/usr/local/Cellar/privoxy/3.0.26/sbin:$PATH
+        ;;
+esac
+alias halt='sudo shutdown -h now'
+alias reboot='sudo reboot'
+alias cd..='cd ..'
+alias cd-='cd -'
+alias grep='grep --color=auto'
+#tcp listen
+alias listen='netstat -tan|grep LISTEN'
+#udp listen
+alias ulisten='netstat -uan|grep LISTEN'
+#当使用sudo执行alias地时候会找不到alias，需要这样设置
+alias sudo='sudo '
+alias cdgowork="cd $GOPATH/src/github.com"
+
+if command -v vim >/dev/null 2>&1;then
+    alias vi='vim'
+fi
+
+if command -v apt-get >/dev/null 2>&1;then
+    alias apt-get='sudo apt-get'
+fi
+
+if command -v yum >/dev/null 2>&1;then
+    alias yum='sudo yum'
+fi
+
+if command -v dnf >/dev/null 2>&1;then
+    alias dnf='sudo dnf'
+fi
+
+if command -v emacs >/dev/null 2>&1;then
+    alias emacs='emacs -nw'
+fi
+
+if command -v nvim >/dev/null 2>&1;then
+    alias vim='nvim'
+fi
+
+if command -v free >/dev/null 2>&1;then
+    alias free='free -hw'
+fi
+alias ss-local=/usr/local/share/ss-local/ss-local
+#END alias
+
+#BEGIN function
+if command -v git >/dev/null 2>&1;then
+    ghclone(){
+        p=${1:?"Usage: ghclone githubAccount/xx.git"}
+        git clone "https://github.com/$p"
+    }
+    gcclone(){
+        p=${1:?"Usage: gcclone coding.netAccount/xx.git"}
+        git clone "https://git.coding.net/$p"
+    }
+    gpon(){
+        #git proxy on funciton
+        git config --global http.proxy "127.0.0.1:8118"
+        git config --global https.proxy "127.0.0.1:8118"
+        gpstatus
+    }
+    gpoff(){
+        #git proxy off function
+        git config --global --unset-all http.proxy
+        git config --global --unset-all https.proxy
+    }
+    gpstatus(){
+        if git config --global -l | grep http.proxy >/dev/null 2>&1;then
+            echo "git proxy is on"
+            git config --global -l | \grep proxy
+        else
+            echo "git proxy is off"
+        fi
+    }
+fi
+
+echoExec(){
+    cmd=${1:?"missing cmd"}
+    echo "$cmd ..."
+    eval "$cmd"
+}
+
+proxyon(){
+    #delete: grep -P can not work on mac
+    #port=$(grep -oP '(?<=listen-address 127.0.0.1:)\d+' /usr/local/share/ss-local/privoxy.config)
+    port=8118
+    if netstat -tan | grep LISTEN | grep "$port" >/dev/null 2>&1;then
+        echoExec "export http_proxy=127.0.0.1:$port"
+        echoExec "export https_proxy=$http_proxy"
+        echoExec "export HTTP_PROXY=$http_proxy"
+        echoExec "export HTTPS_PROXY=$http_proxy"
+        echo "Done."
+    else
+        echo "Warning: local proxy doesn't work on port 8118"
+    fi
+}
+
+proxyoff(){
+    echoExec "unset http_proxy"
+    echoExec "unset https_proxy"
+    echoExec "unset HTTP_PROXY"
+    echoExec "unset HTTPS_PROXY"
+    echo "Done."
+}
+
+proxystatus(){
+    if declare -x | grep 'http_proxy="\{,1\}127.0.0.1:8118' >/dev/null 2>&1;then
+        echo "http proxy is set:"
+        declare -x |grep 8118
+    else
+        echo "http proxy is not set"
+    fi
+}
+
+function incrementBackup(){
+    if (($# !=2));then
+        echo "Usage: incrementBackup srcDir dstDir"
+        return 1
+    fi
+    src="$1"
+    dst="$2"
+
+    if [ ! -e "$src" ];then
+        echo "*Warning* $src does not exist,bye."
+        return 1
+    fi
+
+    #把src转成绝对路径
+    if [[  "${src:0:1}" != "/" ]];then
+        src="$PWD/$src"
+    fi
+
+    #把dst转成绝对路径
+    if [[  "${dst:0:1}" != "/" ]];then
+        dst="$PWD/$dst"
+    fi
+
+    echo "source directory is: $src"
+    echo "destination directory is: $dst"
+
+    if [[ ! -d "$dst" ]];then
+        mkdir -pv "$dst"
+    fi
+
+    #遍历src下的文件
+    for eachItem in $(\ls $src);do
+        srcItem="$src/$eachItem"
+        dstItem="$dst/$eachItem"
+        echo "srcItem is $srcItem"
+        echo "dstItem is $dstItem"
+        #如果srcItem是目录
+        if [[ -d "$srcItem" ]];then
+            #如果dstItem不存在，则直接复制过去，否则递归调用本函数
+            if [[ ! -e "$dstItem" ]];then
+                echo "cp -r $srcItem $dstItem"
+                cp -r "$srcItem" "$dstItem"
+            else
+                #要求dstItem也是目录
+                if [[ ! -d "$dstItem" ]];then
+                    echo "*Error* $srcItem is directory but $dstItem is not"
+                    return 1
+                fi
+                echo "incrementBackup $srcItem $dstItem"
+                incrementBackup "$srcItem" "$dstItem"
+            fi
+
+        #如果srcItem是文件
+        else
+            #不存在的话直接复制过去
+            if [[ ! -e "$dstItem" ]];then
+                echo "cp $srcItem $dstItem"
+                cp -f "$srcItem" "$dstItem"
+            else
+            #存在的话则比较文件日期，当srcItem比dstItem新的时候覆盖掉后者
+                if [[ "$srcItem" -nt "$dstItem" ]];then
+                    echo "cp $srcItem $dstItem"
+                    cp -f "$srcItem" "$dstItem"
+                fi
+            fi
+        fi
+    done
+}
+#END function
+
+#BEGIN others
+if command -v screenfetch >/dev/null 2>&1;then
+    screenfetch
+fi
+#END others
+

@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if ! command -v git>/dev/null 2>&1;then
+    echo "git is not installed!">&2
+    exit 1
+fi
+
+gitconfig(){
+    git config --global user.email "$1"
+    git config --global user.name "$2"
+    git config --global push.default simple
+
+    read -p "Set git proxy ?[Y/n] " gitp
+    if [[ "$gitp" != [nN] ]];then
+        git config --global http.proxy "127.0.0.1:8118"
+        git config --global https.proxy "127.0.0.1:8118"
+    fi
+}
+
+read -p "git user.email: (default: sunliang711@163.com)" email
+read -p "git user.name: (default: sunliang)" name
+if [[ -z "$email" ]];then
+    email="sunliang711@163.com"
+fi
+if [[ -z "$name" ]];then
+    name="sunliang"
+fi
+gitconfig "$email" "$name"
+
+#vim setf sh

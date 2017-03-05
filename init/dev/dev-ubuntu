@@ -1,0 +1,43 @@
+#!/bin/bash
+if ! command -v apt-get >/dev/null 2>&1;then
+    echo "Error: Not ubuntu!"
+    exit 1
+fi
+if [[ $EUID != 0 ]];then
+    echo "Error:need root priviledge!"
+    exit 1
+fi
+
+#TODO
+#设置ubuntu国内源
+
+
+installer=apt-get
+
+#apt比apt-get更好用
+if command -v apt > /dev/null 2>&1;then
+    installer=apt
+fi
+
+basicApps="linux-headers-generic vim vim-gtk tree curl build-essential screenfetch zsh"
+devApps="cmake clang  python-apt python-dev python-pip python3-dev python3-pip libboost-all-dev golang golang-golang-x-tools ncurses-dev"
+inputApps="fcitx fcitx-sunpinyin fcitx-table-wubi"
+
+$installer update -y
+read -p "Install development tools? [Y/n] " installDev
+read -p "Install fcitx input method? [y/N] " installFcitx
+for tool in ${basicApps};do
+    $installer install $tool -y
+done
+
+if [[ "$installDev" != [nN] ]];then
+    for tool in ${devApps};do
+        $installer install $tool -y
+    done
+fi
+
+if [[ "$installFcitx" == [yY] ]];then
+    for tool in ${inputApps};do
+        $installer install $tool -y
+    done
+fi
