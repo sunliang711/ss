@@ -73,7 +73,7 @@ cd -
 cd shell
 /bin/bash 10-zsh-installer.sh
 /bin/bash 20-set-zsh-theme.sh
-/bin/bash 30-config-shell.sh
+/bin/bash 30-config-shell.sh install
 cd -
 
 ##Service
@@ -87,5 +87,5 @@ cd -
 
 ##Set vim
 cd supervim
-/bin/bash install.sh
+/bin/bash install.sh install
 cd -
