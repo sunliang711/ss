@@ -21,13 +21,13 @@ esac
 cd dev
 case "$OS" in
     "Arch")
-        /bin/bash dev-arch
+        sudo /bin/bash dev-arch
         ;;
     "Fedora")
-        /bin/bash dev-fedora
+        sudo /bin/bash dev-fedora
         ;;
     "Ubuntu")
-        /bin/bash dev-ubuntu
+        sudo /bin/bash dev-ubuntu
         ;;
 esac
 cd -
