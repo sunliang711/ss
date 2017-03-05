@@ -64,7 +64,7 @@ if [[ "$setProxy"!=[nN] ]];then
     echo "Done."
 fi
 ##Set git
-if [[ "$setGit"!=[nN]]];then
+if [[ "$setGit"!=[nN] ]];then
     echo "Set git..."
     cd git
     /bin/bash setGit
