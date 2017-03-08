@@ -23,6 +23,7 @@ Acquire::http::Proxy "http://ip:port";
 在运行docker的机器上输入ifconfig，发现docker0的ip地址是172.17.0.1
 所以在Dockerfile中加入如下：
 RUN echo 'Acquire::http::Proxy "http://172.17.0.1:8118";' >> /etc/apt/apt.conf
+注意：代理前面的http://不要忘记了
 
 然后在编译Docker的时候，发现apt-get很快，但是到后面发现git clone github上面一个repo的时候很慢，原因也是git clone在国内的速度很慢，因此可以给git 设置http代理
 RUN git config --global http.proxy "172.17.0.1:8118"
