@@ -9,6 +9,7 @@ gitconfig(){
     git config --global user.email "$1"
     git config --global user.name "$2"
     git config --global push.default simple
+    git config --global alias.tree "log --oneline --graph --decorate --all"
 
     read -p "Set git proxy ?[Y/n] " gitp
     if [[ "$gitp" != [nN] ]];then
