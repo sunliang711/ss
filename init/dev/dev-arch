@@ -8,7 +8,7 @@ if [[ $EUID != 0 ]];then
     exit 1
 fi
 
-archApps="linux-headers clang neovim vim git openssh net-tools cmake python tree boost python-pip go go-tools fontconfig ctags screenfetch wget cronie unzip  zsh zsh-syntax-highlighting"
+archApps="base-devel linux-headers clang neovim vim git openssh net-tools cmake python tree boost python-pip go go-tools fontconfig ctags screenfetch wget cronie unzip  zsh zsh-syntax-highlighting"
 
 pacman -Syu --noconfirm --needed
 for tool in ${archApps};do

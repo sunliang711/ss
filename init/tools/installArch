@@ -74,7 +74,8 @@ mount /dev/${disk}3 /mnt
 mkdir /mnt/boot
 mount /dev/${disk}1 /mnt/boot
 
-pacstrap /mnt base base-devel --needed
+# pacstrap /mnt base base-devel --needed
+pacstrap /mnt base --needed
 genfstab -U /mnt >>/mnt/etc/fstab
 #swap config to fstab
 echo "# /dev/${disk}2 for swap" >>/mnt/etc/fstab
