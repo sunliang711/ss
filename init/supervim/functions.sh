@@ -213,6 +213,11 @@ install(){
         \rm "${cfgFile}bak"
     fi
 
+    if [ -e ~/.custom-shell ];then
+        . ~/.custom-shell
+    else
+        export GOPATH=~/Documents/go
+    fi
     $vim +PlugInstall +qall
 
     if [[ "$vimGo" != [nN] ]];then
