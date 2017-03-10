@@ -10,6 +10,12 @@ gitconfig(){
     git config --global user.name "$2"
     git config --global push.default simple
     git config --global alias.tree "log --oneline --graph --decorate --all"
+    if command -v vim >/dev/null 2>&1;then
+        git config --global core.editor vim
+    fi
+    if command -v vimdiff >/dev/null 2>&1;then
+        git config --global diff.tool vimdiff
+    fi
 
     read -p "Set git proxy ?[Y/n] " gitp
     if [[ "$gitp" != [nN] ]];then
