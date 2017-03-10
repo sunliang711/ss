@@ -6,6 +6,8 @@ set laststatus=2
 set incsearch
 set hlsearch
 set relativenumber
+set cursorline
+set cursorcolumn
 "如果用ssh的连接工具，比如putty xshell连接远程服务器
 "打开vim的话，它的t_Co会设置成8，这样airline的状态栏
 "就不会有五颜六色了，所以这里设置成256来让airline正
