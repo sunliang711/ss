@@ -31,6 +31,7 @@ main() {
   fi
   unset CHECK_ZSH_INSTALLED
 
+  unset ZSH
   if [ ! -n "$ZSH" ]; then
     ZSH=~/.oh-my-zsh
   fi
