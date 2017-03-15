@@ -35,7 +35,7 @@ installDependence(){
     #arch
     if command -v pacman >/dev/null 2>&1;then
         archApps="linux-headers clang neovim vim cmake python boost python-pip go go-tools fontconfig ctags "
-        sudo pacman -Syu
+        sudo pacman -Syu --noconfirm
         for tool in ${archApps};do
             sudo pacman -S $tool --noconfirm --needed
         done
