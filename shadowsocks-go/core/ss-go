@@ -157,7 +157,7 @@ fwOff(){
 case "$1" in
     start)
         start
-	start ss-server config-chacha20.json
+	#start ss-server config-chacha20.json
         #start max-server max-config.json
         status
         fwOn
@@ -173,7 +173,7 @@ case "$1" in
     restart)
         stop
         start
-	start ss-server config-chacha20.json
+	#start ss-server config-chacha20.json
         #start max-server max-config.json
         status
         ;;
