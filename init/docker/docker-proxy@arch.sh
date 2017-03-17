@@ -9,18 +9,26 @@ if ! command -v pacman >/dev/null 2>&1;then
     exit 1
 fi
 
-if [[ -f /etc/systemd/system/docker.service.d/http-proxy.conf ]];then
-    echo "Already exist,exit..."
-    exit 1
+dir=/etc/systemd/system/docker.service.d
+if [ ! -d $dir  ];then
+    mkdir $dir
 fi
 
-mkdir /etc/systemd/system/docker.service.d
-cat >/etc/systemd/system/docker.service.d/http-proxy.conf<<EOF
-[Service]
-Environment="HTTP_PROXY=127.0.0.1:8118"
-EOF
+cfg=/etc/systemd/system/docker.service.d/proxy.conf
+if [ -e $cfg ];then
+    read -p "$cfg already exist,reinstall ? [Y/n] " -t 5 re
+    if [[ "$re" != [nN] ]];then
+        cp proxy.conf $cfg
 
-systemctl daemon-reload
-systemctl restart docker
-systemctl show --property Environment docker
+        systemctl daemon-reload
+        systemctl restart docker
+        systemctl show --property Environment docker
+    fi
+else
+    cp proxy.conf $cfg
+
+    systemctl daemon-reload
+    systemctl restart docker
+    systemctl show --property Environment docker
+fi
 
