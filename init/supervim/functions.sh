@@ -194,15 +194,6 @@ install(){
 
     cp -v ./init.vim $cfgFile
 
-    # if [[ "$vim" == "vim" ]];then
-        # sed -ibak "s+\(call plug#begin('~/\).config/nvim\(/plugins')\)+\1.vim\2+" $cfgFile
-        # \rm "${cfgFile}bak"
-        # sed -ibak "s+\(let g:ycm_global_ycm_extra_conf='~/\).config/nvim+\1.vim+" $cfgFile
-        # \rm "${cfgFile}bak"
-        # sed -ibak "s+.config/nvim+.vim+" $cfgFile
-        # \rm "${cfgFile}bak"
-    # fi
-
     #是否安装YouCompleteMe,默认不安装，5秒之内不输入y则不安装
     read -p "Install YouCompleteMe?(Y/n): " -t 5 installycm
     if [[ "$installycm" =~ [nN] ]];then
@@ -242,6 +233,7 @@ uninstall(){
         rm ~/.vimrc >/dev/null 2>&1
     fi
 }
+
 installVimGo(){
     read -p "Install vimGo for which? (vim/nvim)" vim
     #不同得vim不同的路径
@@ -273,7 +265,7 @@ proxyOn(){
             export HTTPS_PROXY="$http_proxy"
         fi
     else
-        echo "Don't use proxy."
+        echo "No proxy is used."
     fi
 }
 
