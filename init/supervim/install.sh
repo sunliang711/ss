@@ -15,7 +15,7 @@ case $action in
         updateCfg $vim
         ;;
     install)
-        install
+        install $vim
         ;;
     installYcm)
         installYcm $vim
