@@ -136,7 +136,7 @@ installYcm(){
 
 install(){
     needCmd curl
-    installDependence
+    #installDependence
     #安装vim还是nvim到配置
     if (($#==0));then
         read -p "Install plugin for which? (vim/nvim)" vim
