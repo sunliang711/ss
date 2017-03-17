@@ -1,6 +1,6 @@
 #!/bin/bash
 usage(){
-    echo "usage: $(basename $0) install"
+    echo "usage: $(basename $0) install [vim|nvim]"
     echo "       $(basename $0) uninstall [vim|nvim]" 
     echo "       $(basename $0) installYcm [vim|nvim]"
     echo "       $(basename $0) installFont" 
@@ -119,12 +119,12 @@ installYcm(){
     if [ -d "$dest" ];then
         cd "$dest"
         option=
-        read -p "Ycm for clang(cpp)? [Y/n]" clang
+        read -p "Ycm for clang(cpp)? [Y/n]" -t 5 clang
         if [[ "$clang" != [nN] ]];then
             option+=" --clang-completer "
             option+=" --system-libclang "
         fi
-        read -p "Ycm for golang? [Y/n]" golang
+        read -p "Ycm for golang? [Y/n]" -t 5 golang
         if [[ "$golang" != [nN] ]];then
             option+=" --gocode-completer "
         fi
@@ -138,7 +138,11 @@ install(){
     needCmd curl
     installDependence
     #安装vim还是nvim到配置
-    read -p "Install plugin for which? (vim/nvim)" vim
+    if (($#==0));then
+        read -p "Install plugin for which? (vim/nvim)" vim
+    else
+        vim=$1
+    fi
     if [[ "$vim" != "vim" && "$vim" != "nvim" ]];then
         echo "Unkown input '$vim',input vim or nvim!!">&2
         exit 1
@@ -199,15 +203,15 @@ install(){
         # \rm "${cfgFile}bak"
     # fi
 
-    #是否安装YouCompleteMe,默认不安装，30秒之内不输入y则不安装
-    read -p "Install YouCompleteMe?(Y/n): " -t 30 installycm
+    #是否安装YouCompleteMe,默认不安装，5秒之内不输入y则不安装
+    read -p "Install YouCompleteMe?(Y/n): " -t 5 installycm
     if [[ "$installycm" =~ [nN] ]];then
         #comment ycm
         sed -ibak "s/Plug 'Valloric\/YouCompleteMe'/\"&/" $cfgFile
         \rm "${cfgFile}bak"
     fi
 
-    read -p "Install vim-go? [Y/n]" vimGo
+    read -p "Install vim-go? [Y/n]" -t 5 vimGo
     if [[ "$vimGo" =~ [nN] ]];then
         sed -ibak "s+Plug 'fatih/vim-go'+\"&+" $cfgFile
         \rm "${cfgFile}bak"
