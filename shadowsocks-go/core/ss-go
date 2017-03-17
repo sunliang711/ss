@@ -37,7 +37,7 @@ start(){
         return 1
     fi
 
-    if ps aux | grep -v grep | grep -q  ${prgname};then
+    if ps aux | grep -v grep | grep -q  "${prgname} -c $configDir/$cfgName";then
         echo "Warning: ${prgname} is already running"
         return 1
     fi
@@ -157,7 +157,8 @@ fwOff(){
 case "$1" in
     start)
         start
-        start max-server max-config.json
+	start ss-server config-chacha20.json
+        #start max-server max-config.json
         status
         fwOn
         ;;
@@ -172,7 +173,8 @@ case "$1" in
     restart)
         stop
         start
-        start max-server max-config.json
+	start ss-server config-chacha20.json
+        #start max-server max-config.json
         status
         ;;
     config)
