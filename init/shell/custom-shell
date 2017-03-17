@@ -107,8 +107,10 @@ if command -v git >/dev/null 2>&1;then
     }
     gpon(){
         #git proxy on funciton
-        git config --global http.proxy "127.0.0.1:8118"
-        git config --global https.proxy "127.0.0.1:8118"
+        # git config --global http.proxy "http://127.0.0.1:8118"
+        # git config --global https.proxy "http://127.0.0.1:8118"
+        git config --global http.proxy "socks5://127.0.0.1:1080"
+        git config --global https.proxy "socks5://127.0.0.1:1080"
         gpstatus
     }
     gpoff(){
