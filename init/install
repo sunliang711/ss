@@ -78,7 +78,7 @@ if [[ "$setDocker"!=[nN] ]];then
     cd docker
     case "$OS" in
         "Arch")
-            /bin/bash docker-arch
+            /bin/bash docker-arch install
             ;;
     esac
     cd -
