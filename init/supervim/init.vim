@@ -7,7 +7,7 @@ set incsearch
 set hlsearch
 set relativenumber
 set cursorline
-set cursorcolumn
+" set cursorcolumn
 
 set mouse=c
 "如果用ssh的连接工具，比如putty xshell连接远程服务器
