@@ -20,96 +20,97 @@ case $(uname) in
         exit 1;;
 esac
 
-while read -p "For zsh or bash ? [default: zsh] " whichshell;do
-    if [[ -z "$whichshell" ]];then
-        whichshell=zsh
-    fi
-    case $whichshell in
-        "zsh")
-            destPath=$HOME/.zshrc
-            if command -v pacman >/dev/null 2>&1;then
-                sudo pacman -Syu --noconfirm --needed
-                sudo pacman -S zsh-syntax-highlighting --noconfirm --needed
-            fi
-            break
-            ;;
-        "bash")
-            case $(uname) in
-                "Darwin")
-                    destPath=$HOME/.bash_profile
-                    ;;
-                "Linux")
-                    destPath=$HOME/.bashrc
-            esac 
-            break
-            ;;
-        *)
-            echo 'Enter zsh or bash !' >&2
-            ;;
-    esac
-done
 
-startLine="#custom begin"
-endLine="#custom end"
+startLine="##CUSTOM BEGIN"
+endLine="##CUSTOM END"
 
 install(){
-    cp custom-shell  ~/.custom-shell
+    shell=${1:?"missing shell type"}
+    case "$shell" in
+        bash)
+            if [[ "$OS" == linux ]];then
+                cfgFile=$HOME/.bashrc
+            else
+                #mac os
+                cfgFile=$HOME/.bash_profile
+            fi
+            ;;
+        zsh)
+            cfgFile=$HOME/.zshrc
+            ;;
+        *)
+            echo -e "Only support bash or zsh! ${RED}\u2717${RESET}"
+            exit 1
+            ;;
+    esac
     #install custom config
     #the actual config is in file ~/.bashrc(for linux) or ~/.bash_profile(for mac)
 
-    if grep  -q "$startLine" $destPath;then
+    #grep for $startLine quietly
+    if grep  -q "$startLine" $cfgFile;then
         echo "Already installed,Quit!"
-        read -p "already????" xxx
         exit 1
     else
+        echo "Install setting of $shell..."
+        cp custom-shell  ~/.custom-shell
         #insert header
-        echo "$startLine" >> $destPath
+        echo "$startLine" >> $cfgFile
 
         #insert body
-        echo "[ -f ~/.custom-shell ] && source ~/.custom-shell" >> $destPath
+        echo "[ -f ~/.custom-shell ] && source ~/.custom-shell" >> $cfgFile
 
         #insert tailer
-        echo "$endLine" >> $destPath
-
+        echo "$endLine" >> $cfgFile
         echo "Done."
-    fi
-
-    if [[ "$OS" == "darwin" ]];then
-        read -p "Change default shell to zsh? [Y/n]" defzsh
-        if [[ "$defzsh" != [nN] ]];then
-            sudo echo "$(which zsh)" >>/etc/shells
-            chsh -s $(which zsh)
-        fi
     fi
 }
 
 uninstall(){
+    shell=${1:?"missing shell type"}
+    case "$shell" in
+        bash)
+            if [[ "$OS" == linux ]];then
+                cfgFile=$HOME/.bashrc
+            else
+                #mac os
+                cfgFile=$HOME/.bash_profile
+            fi
+            ;;
+        zsh)
+            cfgFile=$HOME/.zshrc
+            ;;
+        *)
+            echo -e "Only support bash or zsh! ${RED}\u2717${RESET}"
+            exit 1
+            ;;
+    esac
+    echo "Uninstall setting of $shell..."
     #uninstall custom config
     #delete lines from header to tailer
-    if [ "$OS" == "darwin" ];then
-        sed -i bak "/$startLine/,/$endLine/ d" $destPath
-        rm ${destPath}bak
-    else
-        sed -i "/$startLine/,/$endLine/ d" $destPath
-    fi
+    sed -ibak "/$startLine/,/$endLine/ d" $cfgFile
+    rm ${cfgFile}bak
     if [ -f $HOME/.custom-shell ];then
         rm $HOME/.custom-shell
     fi
-    echo "Uninstall Done."
+    echo "Done."
 }
 
 reinstall(){
-    uninstall
-    install
+    uninstall bash
+    uninstall zsh
+    install bash
+    install zsh
 }
 
 case "$1" in
     install | ins*)
-        install
+        install bash
+        install zsh
         exit 0
         ;;
     uninstall | unins*)
-        uninstall
+        uninstall bash
+        uninstall zsh
         exit 0
         ;;
     reinstall | reins*)
