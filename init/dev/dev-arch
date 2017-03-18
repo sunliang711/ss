@@ -26,8 +26,8 @@ systemctl enable sshd
 systemctl enable dhcpcd
 systemctl enable cronie
 
-read -p "Install Desktop Environment? [Y/n] " de
-if [[ "$de" != [nN] ]];then
+read -p "Install Desktop Environment? [y/N] " -t 5 de
+if [[ "$de" == [yY] ]];then
     while read -p "Install which display manager ?[lxdm or sddm ] " dm;do
         if echo $dm | grep -P '^(lxdm|sddm)$';then
             echo "$dm will be installed"
