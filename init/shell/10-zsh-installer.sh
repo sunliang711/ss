@@ -114,3 +114,6 @@ main() {
 }
 
 main
+if command -v pacman >/dev/null 2>&1;then
+    sudo pacman -S zsh-syntax-highlighting --noconfirm --needed > /dev/null 2>&1
+fi
