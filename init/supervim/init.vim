@@ -171,6 +171,9 @@ Plug 'fatih/vim-go'
 
 Plug 'Valloric/YouCompleteMe'
 
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+
 "给其他插件比如ctrlp nerdtree startify增加图标
 Plug 'ryanoasis/vim-devicons'
 
@@ -295,6 +298,20 @@ let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
 
+let g:ycm_key_list_select_completion = ['', '']
+let g:ycm_key_list_previous_completion = ['']
+" let g:ycm_key_invoke_completion = '<C-Space>'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+"         ultisnips
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" UltiSnips setting
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-b>"
+" let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
 "      Nerdtree Config 
@@ -317,10 +334,12 @@ let g:go_highlight_types = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
-au FileType go map <F3> <Plug>(go-def-vertical)
+" au FileType go map <F3> <Plug>(go-def-vertical)
+au FileType go map <F3> <Plug>(go-def)
 au FileType go map <F4> <Plug>(go-doc)
 au FileType go map <F5> <Plug>(go-run)
 
+"
 " color summerfruit256
 " color github
 
