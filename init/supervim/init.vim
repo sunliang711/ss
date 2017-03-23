@@ -147,7 +147,7 @@ Plug 'haya14busa/incsearch.vim'
 "对齐插件 :Tab /<char-to-be-alignment>
 Plug 'godlygeek/tabular'
 "头文件源文件切换插件
-Plug 'vim-scripts/a.vim'
+" Plug 'vim-scripts/a.vim'
 
 "快速给词加环绕符号,例如单引号 双引号括号
 "常用命令
@@ -298,8 +298,8 @@ let g:ycm_seed_identifiers_with_syntax = 1
 let g:ycm_complete_in_comments = 1
 let g:ycm_complete_in_strings = 1
 
-let g:ycm_key_list_select_completion = ['', '']
-let g:ycm_key_list_previous_completion = ['']
+" let g:ycm_key_list_select_completion = ['', '']
+" let g:ycm_key_list_previous_completion = ['']
 " let g:ycm_key_invoke_completion = '<C-Space>'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -309,7 +309,7 @@ let g:ycm_key_list_previous_completion = ['']
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " UltiSnips setting
-let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsExpandTrigger="<c-space>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 " let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -334,6 +334,7 @@ let g:go_highlight_types = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
+" let g:go_fmt_fail_silently = 1
 " au FileType go map <F3> <Plug>(go-def-vertical)
 au FileType go map <F3> <Plug>(go-def)
 au FileType go map <F4> <Plug>(go-doc)
