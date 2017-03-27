@@ -165,9 +165,9 @@ install(){
     mkdir -pv $destdir/plugins
 
     #copy color scheme
-    cp -lr ./colors $destdir
+    cp -r ./colors $destdir
     #copy ftplugin
-    cp -lr ./ftplugin $destdir
+    cp -r ./ftplugin $destdir
 
     msg  "Downloading vim-plug from github..."
     curl -fLo $destdir/autoload/plug.vim --create-dirs \
