@@ -148,7 +148,7 @@ install(){
         exit 1
     fi
     installFont
-    #不同得vim不同的路径
+    #不同的vim不同的路径
     if [[ "$vim" == "nvim" ]];then
         needCmd pip
         needCmd nvim
@@ -157,7 +157,14 @@ install(){
     elif [[ "$vim" == "vim" ]];then
         needCmd vim
         destdir="$HOME/.vim"
-        cfgFile="$HOME/.vimrc"
+        version=$(\vim --version | grep -Po '(?<=Vi IMproved )\d+\.\d+')
+        echo "vim version is ${version}"
+        if (( $(echo "$version>=7.4" | bc -l) )) ;then
+            #vim 7.4以后，vimrc文件可以放到.vim目录中
+            cfgFile="$destdir/vimrc"
+        else
+            cfgFile="$HOME/.vimrc"
+        fi
     fi
 
     uninstall $vim

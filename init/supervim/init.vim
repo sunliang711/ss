@@ -86,7 +86,11 @@ if has('nvim')
     " let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
     nnoremap <silent> <leader>e :tab e ~/.config/nvim/init.vim<CR>
 else
-    nnoremap <silent> <leader>e :tab e ~/.vimrc<CR>
+    if v:version >= 740
+        nnoremap <silent> <leader>e :tab e ~/.vim/vimrc<CR>
+    else
+        nnoremap <silent> <leader>e :tab e ~/.vimrc<CR>
+    endif
 endif
 
 nnoremap <silent> <leader>n :bn<CR>
@@ -349,8 +353,11 @@ au FileType go map <F4> <Plug>(go-doc)
 au FileType go map <F5> <Plug>(go-run)
 
 "
-" color summerfruit256
-color github
+if has('nvim')
+    color github
+else
+    color summerfruit256
+endif
 
 map <f3> :execute "noautocmd vimgrep /" .expand("<cword>") . "/gj " . expand("%") <Bar>cw<CR>
 map <f4> :execute "noautocmd vimgrep /" . expand("<cword>") . "/gj **" <Bar>  cw<CR>
