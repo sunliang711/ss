@@ -168,7 +168,15 @@ Plug 'vim-scripts/DoxygenToolkit.vim'
 
 "vim-go
 Plug 'fatih/vim-go'
+"better document viewer
+Plug 'garyburd/go-explorer'
 
+if has('nvim')
+    Plug 'Shougo/deoplete.nvim'
+    Plug 'zchee/deoplete-go'
+else
+    Plug 'Shougo/neocomplete.vim'
+endif
 Plug 'Valloric/YouCompleteMe'
 
 Plug 'SirVer/ultisnips'
@@ -309,7 +317,7 @@ let g:ycm_complete_in_strings = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " UltiSnips setting
-let g:UltiSnipsExpandTrigger="<c-space>"
+let g:UltiSnipsExpandTrigger="<c-m>"
 let g:UltiSnipsJumpForwardTrigger="<c-b>"
 " let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -342,7 +350,7 @@ au FileType go map <F5> <Plug>(go-run)
 
 "
 " color summerfruit256
-" color github
+color github
 
 map <f3> :execute "noautocmd vimgrep /" .expand("<cword>") . "/gj " . expand("%") <Bar>cw<CR>
 map <f4> :execute "noautocmd vimgrep /" . expand("<cword>") . "/gj **" <Bar>  cw<CR>
