@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if ! command -v pacman >/dev/null 2>&1;then
     echo "Only support archlinux currently!"

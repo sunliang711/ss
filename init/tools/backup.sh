@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 logpath=/root/backup.log
 TAR=/bin/tar
