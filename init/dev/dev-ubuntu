@@ -24,8 +24,8 @@ devApps="cmake clang  python-apt python-dev python-pip python3-dev python3-pip l
 inputApps="fcitx fcitx-sunpinyin fcitx-table-wubi"
 
 $installer update -y
-read -p "Install development tools? [Y/n] " installDev
-read -p "Install fcitx input method? [y/N] " installFcitx
+read -p "Install development tools? [Y/n] " -t 3 installDev
+read -p "Install fcitx input method? [y/N] " -t 3 installFcitx
 for tool in ${basicApps};do
     $installer install $tool -y
 done
