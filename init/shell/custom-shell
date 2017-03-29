@@ -51,7 +51,7 @@ alias listen='netstat -tan|grep LISTEN'
 alias ulisten='netstat -uan|grep LISTEN'
 #当使用sudo执行alias地时候会找不到alias，需要这样设置
 alias sudo='sudo '
-alias cdgowork="cd $GOPATH/src/github.com"
+alias cdgo="cd $GOPATH/src/github.com"
 
 if command -v vim >/dev/null 2>&1;then
     alias vi='vim'
