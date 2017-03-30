@@ -10,6 +10,11 @@ fi
 
 #TODO
 #设置ubuntu国内源
+if [ -e /etc/issue ];then
+    version=$(grep -Po '^\w+ \d+\.\d+' /etc/issue)
+    sourcefile="${version}-china-source"
+    bash $sourcefile
+fi
 
 
 installer=apt-get
