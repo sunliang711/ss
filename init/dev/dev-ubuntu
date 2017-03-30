@@ -8,10 +8,12 @@ if [[ $EUID != 0 ]];then
     exit 1
 fi
 
-read -p "Use Chinese software source ? [y/N] " -t 5 soft
-if [[ "$soft" == [yY] ]];then
 #设置ubuntu国内源
-    bash ./ubuntu-china-source
+if grep -i 'ubuntu' /etc/issue >/dev/null 2>&1;then
+    read -p "Use Chinese software source ? [y/N] " -t 5 soft
+    if [[ "$soft" == [yY] ]];then
+        bash ./ubuntu-china-source
+    fi
 fi
 
 installer=apt-get
