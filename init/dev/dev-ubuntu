@@ -13,6 +13,7 @@ fi
 if [ -e /etc/issue ];then
     version=$(grep -Po '^\w+ \d+\.\d+' /etc/issue)
     sourcefile="${version}-china-source"
+    sourcefile=${sourcefile/ /-}
     bash $sourcefile
 fi
 
