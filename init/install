@@ -122,11 +122,14 @@ fi
 if [[ "$setSupervim"!=[nN] ]];then
     echo "Set supervim..."
     cd supervim
-    if command -v pacman >/dev/null 2>&1;then
-        /bin/bash install.sh install nvim
-    else
-        /bin/bash install.sh install vim
-    fi
+    case "$OS" in
+        Arch|Darwin)
+	    /bin/bash install.sh install nvim
+            ;;
+        *)
+            /bin/bash install.sh install vim
+            ;;
+    esac
     cd -
     echo "Done."
 fi

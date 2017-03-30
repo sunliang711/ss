@@ -64,7 +64,7 @@ installDependence(){
 #安装airline需要用的字体
 installFont(){
     case $(uname) in
-        "Linux"|"Darwin")
+        "Linux")
             if fc-list | grep -iq Powerline;then
                 return
             fi
@@ -80,6 +80,10 @@ installFont(){
                 mkdir -pv ~/.config/fontconfig/conf.d
             fi
             cp ./fonts/10-powerline-symbols.conf ~/.config/fontconfig/conf.d
+            ;;
+        "Darwin")
+            ALL_PROXY=socks5://127.0.0.1:1080 brew tap caskroom/fonts
+            ALL_PROXY=socks5://127.0.0.1:1080 brew cask install font-hack-nerd-font
             ;;
         MINGW32*)
             echo "Please install nerd font manually."
@@ -215,11 +219,7 @@ install(){
         \rm "${cfgFile}bak"
     fi
 
-    if [ -e ~/.custom-shell ];then
-        . ~/.custom-shell
-    else
-        export GOPATH=~/Documents/go
-    fi
+    export GOPATH=~/Documents/go
     $vim +PlugInstall +qall
 
     if [[ "$vimGo" != [nN] ]];then
