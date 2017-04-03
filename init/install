@@ -59,7 +59,6 @@ if [[ "$setProxy"!=[nN] ]];then
         export HTTPS_PROXY=127.0.0.1:8118
     else
         echo "Error ss-client start error: can not find listen port on 8118"
-        exit 1
     fi
     echo "Done."
 fi
