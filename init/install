@@ -39,6 +39,9 @@ if [[ "$installDev"!=[nN] ]];then
         "Ubuntu")
             sudo /bin/bash dev-ubuntu
             ;;
+        "Darwin")
+            /bin/bash dev-mac
+            ;;
     esac
     cd -
     echo "Done."
