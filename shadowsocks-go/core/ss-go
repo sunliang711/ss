@@ -173,6 +173,8 @@ case "$1" in
     restart)
         stop
         start
+        fwOff
+        fwOn
 	#start ss-server config-chacha20.json
         #start max-server max-config.json
         status
