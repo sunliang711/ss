@@ -8,6 +8,7 @@ fi
 gitconfig(){
     git config --global user.email "$1"
     git config --global user.name "$2"
+    git config --global http.postBuffer 524288000
     git config --global push.default simple
     #save password for several minutes
     git config --global credential.helper cache
