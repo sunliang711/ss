@@ -381,3 +381,9 @@ map <f4> :execute "noautocmd vimgrep /" . expand("<cword>") . "/gj **" <Bar>  cw
 
 nnoremap <silent> <F9> :PreviousColorScheme<CR>
 nnoremap <silent> <F10> :NextColorScheme<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+"      format json file
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+":%!python -m json.tool
