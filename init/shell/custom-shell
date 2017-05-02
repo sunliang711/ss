@@ -244,6 +244,9 @@ fi
 #END others
 if command -v godoc >/dev/null 2>&1;then
     if ! ps aux|grep 'godoc -http=:12306'|grep -v grep;then
-        nohup godoc -http=:12306 -play -index&
+        #因为godoc做本地文档服务器的时候，会把GOPATH中的本地代码也显示出来
+        #如果本地代码很多的时候，这样回显得很乱
+        #把GOPATH设置到一个假的GOPATH地方
+        export GOPATH=~; nohup godoc -http=:12306 -play -index&
     fi
 fi
