@@ -242,3 +242,8 @@ if command -v screenfetch >/dev/null 2>&1;then
     screenfetch
 fi
 #END others
+if command -v godoc >/dev/null 2>&1;then
+    if ! ps aux|grep 'godoc -http=:12306'|grep -v grep;then
+        nohup godoc -http=:12306 -play -index&
+    fi
+fi
