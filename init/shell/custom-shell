@@ -235,6 +235,19 @@ function incrementBackup(){
         fi
     done
 }
+
+#创建目录并进入该目录
+function mkcddir(){
+    if (($#!=1));then
+        echo "Usage: mkcddir new_dir_name_here"
+        return 1
+    fi
+    if [ -e "$1" ];then
+        echo "$1 already exists"
+        return 1
+    fi
+    mkdir "$1" && cd $_
+}
 #END function
 
 #BEGIN others
