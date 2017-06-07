@@ -21,3 +21,7 @@ service apache2 restart
 #1.要启用rewrite模块，通过a2enmod rewrite命令
 #2.在/etc/apache2/apache2.conf中
 #  把<Directory /var/www/>里面的AllowOverride None改成AllowOverride All
+
+#Note
+#别忘了把网站目录所有权改成www-data
+#chown -R www-data:www-data /var/www/html/example.com
