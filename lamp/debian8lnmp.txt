@@ -1,0 +1,46 @@
+#need root privilege
+
+apt-get update
+apt-get install nginx -y 
+apt-get install mysql-server -y
+mysql_secure_installation
+
+apt-get install php5-fpm php5-mysql
+#edit /etc/php5/fpm/php.ini
+#change cgi.fix_pathinfo to 0
+systemctl restart php5-fpm
+
+vi /etc/nginx/sites-available/default
+server{
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    #设置wordpress根目录
+    root /var/www/html/wordpress;
+    index index.php index.html index.htm index.nginx-debian.html;
+
+    server_name your_server_ip;
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+    }
+    location ~ /\.ht {
+        deny all;
+    }
+
+    #如果需要设置wordpress自定义固定链接
+    #1.wordpress装在网站根目录下
+    location / {
+        if (!-e $request_filename) {
+            rewrite (.*) /index.php
+        }
+    }
+    #2.wordpress装在网站子目录下
+    location /wordpress/ {
+        if (!-e $request_filename) {
+            rewrite (.*) /wordpress/index.php
+        }
+    }
+
+}
