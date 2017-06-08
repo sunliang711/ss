@@ -44,3 +44,8 @@ server{
     }
 
 }
+
+如果安装phpmyadmin：apt-get install phpmyadmin -y
+可以把phpmyadmin的web目录做个软链接到/var/www/html/wordpress下
+它的配置文件在/etc/phpmyadmin/config.inc.php中(在这里面可以设置不需要密码登录(mysql没有设置root密码的时候)AllowNoPassword)
+这样可以通过domain/phpmyadmin来访问
