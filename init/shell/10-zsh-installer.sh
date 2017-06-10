@@ -1,3 +1,13 @@
+if ! command -v zsh >/dev/null 2>&1;then
+	if command -v apt-get >/dev/null 2>&1;then
+		apt-get install -y zsh
+	elif command -v yum >/dev/null 2>&1;then
+		yum install -y zsh
+	elif command -v pacman >/dev/null 2>&1;then
+		pacman -S zsh --no-confirm
+	fi
+fi
+
 main() {
   # Use colors, but only if connected to a terminal, and that terminal
   # supports them.
