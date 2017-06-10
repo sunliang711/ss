@@ -29,7 +29,7 @@ read -p "Set shell? [Y/n] (install zsh,zsh theme,source .custom-shell) " setShel
 read -p "Set service? [Y/n] (support archlinux rc-local service currently)" setService
 read -p "Set supervim? [Y/n] " setSupervim
 ##Install dev tools
-if [[ "$installDev"!=[nN] ]];then
+if [[ "$installDev" != [nN] ]];then
     echo "Install dev tools..."
     cd dev
     case "$OS" in
@@ -51,7 +51,7 @@ if [[ "$installDev"!=[nN] ]];then
 fi
 
 ##Set proxy
-if [[ "$setProxy"!=[nN] ]];then
+if [[ "$setProxy" != [nN] ]];then
     # echo "Set proxy..."
     # if [ ! -e /usr/local/bin/ss-client ];then
     #     echo "Error: Can't find ss-client!"
@@ -70,7 +70,7 @@ if [[ "$setProxy"!=[nN] ]];then
     echo "Done."
 fi
 ##Set git
-if [[ "$setGit"!=[nN] ]];then
+if [[ "$setGit" != [nN] ]];then
     echo "Set git..."
     cd git
     /bin/bash setGit
@@ -79,7 +79,7 @@ if [[ "$setGit"!=[nN] ]];then
 fi
 
 ##Set docker
-if [[ "$setDocker"!=[nN] ]];then
+if [[ "$setDocker" != [nN] ]];then
     echo "Set docker..."
     cd docker
     case "$OS" in
@@ -92,7 +92,7 @@ if [[ "$setDocker"!=[nN] ]];then
 fi
 
 ##Set golang
-if [[ "$setGolang"!=[nN] ]];then
+if [[ "$setGolang" != [nN] ]];then
     echo "Set golang..."
     cd golang
     /bin/bash setGolang
@@ -101,7 +101,7 @@ if [[ "$setGolang"!=[nN] ]];then
 fi
 
 ##Set shell
-if [[ "$setShell"!=[nN] ]];then
+if [[ "$setShell" != [nN] ]];then
     echo "Set shell..."
     cd shell
     /bin/bash 10-zsh-installer.sh
@@ -112,7 +112,7 @@ if [[ "$setShell"!=[nN] ]];then
 fi
 
 ##Service
-if [[ "$setService"!=[nN] ]];then
+if [[ "$setService" != [nN] ]];then
     echo "Set service..."
     cd service
     case "$OS" in
@@ -125,7 +125,7 @@ if [[ "$setService"!=[nN] ]];then
 fi
 
 ##Set vim
-if [[ "$setSupervim"!=[nN] ]];then
+if [[ "$setSupervim" != [nN] ]];then
     echo "Set supervim..."
     cd supervim
     case "$OS" in
