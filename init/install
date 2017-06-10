@@ -49,6 +49,7 @@ if [[ "$installDev" != [nN] ]];then
             ;;
         "Debian")
             /bin/bash dev-debian
+            ;;
         "Darwin")
             /bin/bash dev-mac
             ;;
