@@ -15,19 +15,19 @@ if command -v apt > /dev/null 2>&1;then
     installer=apt
 fi
 
-basicApps="sudo vim vim-gtk tree curl build-essential screenfetch zsh"
-devApps="cmake clang  python-apt python-dev python-pip python3-dev python3-pip libboost-all-dev golang golang-golang-x-tools ncurses-dev"
+basicApps="sudo vim vim-gtk tree curl screenfetch zsh"
+devApps="build-essential cmake clang  python-apt python-dev python-pip python3-dev python3-pip libboost-all-dev golang golang-golang-x-tools ncurses-dev"
 
 $installer update -y
-read -p "Install development tools? [y/N] " -t 3 installDev
+read -p "Install development tools (ie:clang python boost golang)? [y/N] " -t 3 installDev
 read -p "Setup swap? [Y/n]" -t 3 setupSwap
-for tool in ${basicApps};do
-    $installer install $tool -y
+for app in ${basicApps};do
+    $installer install $app -y
 done
 
 if [[ "$installDev" == [yY] ]];then
-    for tool in ${devApps};do
-        $installer install $tool -y
+    for app in ${devApps};do
+        $installer install $app -y
     done
 fi
 

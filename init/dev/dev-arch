@@ -7,13 +7,20 @@ if [[ $EUID != 0 ]];then
     echo "Error:need root priviledge!"
     exit 1
 fi
+basicApps="neovim vim git openssh net-tools tree screenfetch wget cronie unzip zsh zsh-syntax-highlighting ctags fontconfig"
+devApps="base-devel linux-headers clang cmake python boost python-pip go go-tools"
 
-archApps="base-devel linux-headers clang neovim vim git openssh net-tools cmake python tree boost python-pip go go-tools fontconfig ctags screenfetch wget cronie unzip  zsh zsh-syntax-highlighting"
-
+read -p "Install development apps (ie:clang python boost go) [Y/n] " -t 3 installDev
 pacman -Syu --noconfirm --needed
-for tool in ${archApps};do
-    pacman -S $tool --noconfirm --needed
+for app in ${basicApps};do
+    pacman -S $app --noconfirm --needed
 done
+
+if [[ "$installDev" != [nN] ]];then
+    for app in ${devApps};do
+        pacman -S $app --noconfirm --needed
+    done
+fi
 
 if dmesg | grep -iq hypervisor;then
     if dmesg | grep -iq vbox;then

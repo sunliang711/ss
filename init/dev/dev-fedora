@@ -15,17 +15,25 @@ sed -i 's/\(^GRUB_TIMEOUT=\)[0-9]\+/\11/' /etc/default/grub && grub2-mkconfig -o
 #TODO
 #设置fedora国内源
 
+basicApps="vim tree screenfetch"
 #install development tools
-fedoraApps="kernel-devel vim clang python-devel python-pip python3-devel python3-pip cmake tree golang golang-godoc boost-devel ncurses-devel screenfetch"
+devApps="kernel-devel clang python-devel python-pip python3-devel python3-pip cmake golang golang-godoc boost-devel ncurses-devel"
+read -p "Install development apps (ie: clang python golang boost)? [Y/n] " -t 3 installDev
 dnf update -y
-dnf groupinstall "development tools" -y
-for tool in ${fedoraApps};do
-    dnf install $tool -y
+for app in ${basicApps};do
+    dnf install $app -y
 done
 
+if [[ "$installDev" != [nN] ]];then
+    dnf groupinstall "development tools" -y
+    for tool in ${devApps};do
+        dnf install $tool -y
+    done
+fi
+
 #parallels desktop
-read -p "Install parallels tools dependency?(Y/n)" pd
-if [[ "$pd" != [nN] ]];then
-    sudo dnf -y install dkms
-    sudo dnf -y install selinux-policy-devel
+read -p "Install parallels tools dependency?[y/N] " -t 3 pd
+if [[ "$pd" == [yY] ]];then
+    dnf install dkms -y
+    dnf install selinux-policy-devel -y
 fi
