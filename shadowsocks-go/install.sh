@@ -39,18 +39,18 @@ done
 #auto start on boot
 if [ ! -f /etc/rc.local ];then
     echo "***Warning***Cannot found /etc/rc.local,so cannot start ss-go on startup">&2
-    echo "***Warning***You can add: $ROOT/ss-go start to startup script manually!">&2
+    echo "***Warning***You can add: $exeDir/ss-go start to startup script manually!">&2
 else
     if ! grep -q "ss-go start" /etc/rc.local;then
-        sed -i "/^exit 0/i$ROOT/ss-go start" /etc/rc.local
+        sed -i "/^exit 0/i$exeDir/ss-go start" /etc/rc.local
     fi
 fi
 
 #add alias for ss-go
-if ! grep -q "alias ss-go" ~/.bashrc;then
-    echo "alias ss-go=\"$ROOT/ss-go\"">>~/.bashrc
-    echo "***Info***Source ~/.bashrc to use alias 'ss-go'"
-fi
+#if ! grep -q "alias ss-go" ~/.bashrc;then
+    #echo "alias ss-go=\"$exeDir/ss-go\"">>~/.bashrc
+    #echo "***Info***Source ~/.bashrc to use alias 'ss-go'"
+#fi
 
 #start server
 "$exeDir/ss-go" start
