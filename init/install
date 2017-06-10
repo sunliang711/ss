@@ -12,7 +12,12 @@ case $(uname) in
         elif command -v dnf >/dev/null 2>&1;then
             OS="Fedora"
         elif command -v apt-get >/dev/null 2>&1;then
-            OS="Ubuntu"
+            if lsb_release -a |grep Debian >/dev/null 2>&1;then
+                Os="Debian"
+            fi
+            if lsb_release -a |grep Ubuntu >/dev/null 2>&1;then
+                OS="Ubuntu"
+            fi
         fi
         ;;
     *)
@@ -42,6 +47,8 @@ if [[ "$installDev" != [nN] ]];then
         "Ubuntu")
             sudo /bin/bash dev-ubuntu
             ;;
+        "Debian")
+            /bin/bash dev-debian
         "Darwin")
             /bin/bash dev-mac
             ;;
