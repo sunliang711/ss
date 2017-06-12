@@ -23,7 +23,8 @@ currentOS(){
                 fi
             #yum -> centos or fedora
             elif command -v yum >/dev/null 2>&1;then
-
+                #TODO
+                echo 'yum'
             fi
             ;;
         "Darwin")
