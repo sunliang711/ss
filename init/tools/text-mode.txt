@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if (($EUID!=0));then
+    echo "need root!"
+    exit 1
+fi
+#ubuntu 14.04
+version=$(lsb_release -a 2>/dev/null | grep -oP 'Release'|grep -oP '\d.+')
+if [[ "$version" == "16.04" ]];then
+
+fi
+cp -n /etc/default/grub{,.bak}
+#comment the line GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
+#this will disable the ubuntu purple screen and boot message
+sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT/#&/' /etc/default/grub
+
+#change GRUB_CMDLINE_LINUX="" to GRUB_CMDLINE_LINUX="text"
+sed -i 's/\(GRUB_CMDLINE_LINUX=\).\+/\1"text"/'/etc/default/grub
+
+#uncomment #GRUB_TERMINAL=console
+#this makes grub menu into text mode(without background image)
+sed -i 's/GRUB_TERMINAL/#&/' /etc/default/grub
+
+update-grub
+
+#ubuntu 16.04
+systemctl set-default multi-user.target

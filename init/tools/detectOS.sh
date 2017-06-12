@@ -1,57 +1,36 @@
 #!/bin/bash
 # 检测出当前系统的版本，形如ubuntu-16.10,archlinux,fedora-23,centos-6.8,debian-8,macos
-
-detectOS(){
-    Platform=
-    OStype=
-    OSversion=
+currentOS(){
     case "$(uname)" in
-        Linux)
-            Platform="Linux"
-            ;;
-        Darwin)
-            Platform="Darwin"
-            ;;
-        *)
-            ;;
-    esac
-
-    if [ -z "$Platform" ];then
-        exit 1
-    fi
-
-    case "$(Platform)" in
-        Linux)
+        "Linux")
+            #pacman -> archlinux
             if command -v pacman >/dev/null 2>&1;then
-                OStype="archlinux"
-            fi
-            if command -v apt-get >/dev/null 2>&1;then
-                OStype="debian"
-            fi
-            if command -v yum >/dev/null 2>&1;then
-                OStype="redhat"
-            fi
-            if command -v dnf >/dev/null 2>&1;then
-                OStype="redhat"
+                echo "archlinux"
+
+            #apt-get -> debian or ubuntu
+            elif command -v apt-get >/dev/null 2>&1;then
+                #get version info from lsb_release -a
+                #lsb_release -a命令会有个错误输出No LSB modules are available.把这个丢弃使用 2>/dev/null
+                lsb=$(lsb_release -a 2>/dev/null)
+                distributor=$(echo "$lsb" | grep 'Distributor ID' | grep -oP ':.*' | grep -oP '\w+')
+                if [[ "$distributor" == "Ubuntu" ]];then
+                    echo "$lsb" | grep "Description" | awk -F: '{print $2}' | awk '{print $1"-"$2}'
+                elif [[ "$distributor" == "Debian" ]];then
+                    release=$(echo "$lsb" | grep 'Release' | grep -oP ':.*' | grep -oP '\d.+')
+                    echo "$distributor-$release"
+                else
+                    echo "error(not ubuntu or debian)"
+                fi
+            #yum -> centos or fedora
+            elif command -v yum >/dev/null 2>&1;then
+
             fi
             ;;
-        Darwin)
+        "Darwin")
+            echo "macos"
             ;;
         *)
-            ;;
-    esac
-
-    case "$(OStype)" in
-        archlinux)
-            # 输出archlinux并退出
-            echo "archlinux"
-            exit 0
-            ;;
-        debian)
-            # 判断debian版本或者ubuntu版本并输出
-            ;;
-        redhat)
-            # 判断fedora版本或者centos版本并输出
+            echo "error"
             ;;
     esac
 }
