@@ -277,7 +277,8 @@ currentOS(){
             fi
             ;;
         "Darwin")
-            echo "macos"
+            release=$(sw_vers -productVersion)
+            echo "macos-$release"
             ;;
         *)
             echo "error"
