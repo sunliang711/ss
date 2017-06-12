@@ -79,7 +79,11 @@ if command -v nvim >/dev/null 2>&1;then
 fi
 
 if command -v free >/dev/null 2>&1;then
-    alias free='free -hw'
+    if command -v pacman >/dev/null 2>&1;then
+        alias free='free -hw'
+    else
+        alias free='free -h'
+    fi
 fi
 alias ss-local=/usr/local/share/ss-local/ss-local
 #END alias
