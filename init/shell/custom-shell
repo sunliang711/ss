@@ -276,8 +276,10 @@ currentOS(){
                 fi
             #yum -> centos or fedora
             elif command -v yum >/dev/null 2>&1;then
-                awk '{print $1"-"$3}' /etc/redhat-release | tr [:upper:] [:lower:]
-
+                info=$(cat /etc/redhat-release)
+                os=$(echo $info | awk '{print $1}' | tr [:upper:] [:lower:])
+                release=$(echo $info | grep -oP '(?<=release )\d[^ \t]+')
+                echo "$os-$release"
             else
                 echo "unknown"
             fi
