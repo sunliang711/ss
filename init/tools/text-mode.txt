@@ -29,3 +29,9 @@ case "$version" in
         ;;
 esac
 
+#centos 6
+/etc/inittab  5->3
+
+#fedora
+systemctl set-default multi-user.target
+
