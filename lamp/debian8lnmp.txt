@@ -1,13 +1,14 @@
 #need root privilege
 
 apt-get update
-apt-get install nginx -y 
-apt-get install mysql-server -y
+apt-get install nginx mysql-server php5-fpm php5-mysql unzip vim -y
 mysql_secure_installation
 
-apt-get install php5-fpm php5-mysql
 #edit /etc/php5/fpm/php.ini
 #change cgi.fix_pathinfo to 0
+cp -n /etc/php5/fpm/php.ini{,.bak}
+sed -ri 's/^;(cgi.fix_pathinfo=)1/\10/' /etc/php5/fpm.php.ini
+
 systemctl restart php5-fpm
 
 vi /etc/nginx/sites-available/default
@@ -33,13 +34,13 @@ server{
     #1.wordpress装在网站根目录下
     location / {
         if (!-e $request_filename) {
-            rewrite (.*) /index.php
+            rewrite (.*) /index.php;
         }
     }
     #2.wordpress装在网站子目录下
     location /wordpress/ {
         if (!-e $request_filename) {
-            rewrite (.*) /wordpress/index.php
+            rewrite (.*) /wordpress/index.php;
         }
     }
 
