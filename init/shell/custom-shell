@@ -295,10 +295,13 @@ currentOS(){
 }
 
 bk(){
-    f=${1:?"usage: bk some_exist_file"}
+    if (($# !=1));then
+        echo "Usage: bk The_exist_file_or_directory" 1>&2
+        return 1
+    fi
     if [ ! -e "$f" ];then
         echo "$f does not exist!"
-        return 1
+        return 2
     fi
     cp -n "$1" "$1.bak"
 }
