@@ -43,6 +43,12 @@ server{
             rewrite (.*) /wordpress/index.php;
         }
     }
+    #比如wordpress下面还有个english文件夹用作英文网站
+    location /english/ {
+        if (!-e $request_filename) {
+            rewrite (.*) /english/index.php;
+        }
+    }
 
 }
 
