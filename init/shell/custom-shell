@@ -259,7 +259,7 @@ currentOS(){
         "Linux")
             #pacman -> archlinux
             if command -v pacman >/dev/null 2>&1;then
-                currentos="archlinux"
+                currentos="archlinux-$(uname -r)"
 
             #apt-get -> debian or ubuntu
             elif command -v apt-get >/dev/null 2>&1;then
