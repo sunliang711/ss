@@ -318,6 +318,16 @@ godoc(){
         fi
     fi
 }
+
+pgrep(){
+    if (($# != 1));then
+        echo "Usage: pgrep some_program_name"
+        return 1
+    fi
+    local name
+    name=${1}
+    ps aux | grep "${name}" | grep -v grep
+}
 #END function
 
 #BEGIN others

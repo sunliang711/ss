@@ -23,6 +23,27 @@ local white_bold=$fg_bold[white]
 
 local highlight_bg=$bg[red]
 
+#{{vi indicator
+vim_ins_mode="%{$fg[cyan]%}[INS]%{$reset_color%}"
+vim_cmd_mode="%{$fg[green]%}[CMD]%{$reset_color%}"
+vim_mode=$vim_ins_mode
+
+function zle-keymap-select {
+  vim_mode="${${KEYMAP/vicmd/${vim_cmd_mode}}/(main|viins)/${vim_ins_mode}}"
+  zle reset-prompt
+}
+zle -N zle-keymap-select
+
+function zle-line-finish {
+  vim_mode=$vim_ins_mode
+}
+zle -N zle-line-finish
+function TRAPINT() {
+  vim_mode=$vim_ins_mode
+  return $(( 128 + $1 ))
+}
+#}}
+
 local zeta='ζ'
 
 # Machine name.
@@ -120,5 +141,5 @@ autoload -U add-zsh-hook
 add-zsh-hook precmd print_prompt_head
 setopt prompt_subst
 
-PROMPT='$(get_prompt_indicator)'
+PROMPT='${vim_mode}$(get_prompt_indicator) '
 RPROMPT='$(git_prompt_short_sha) '
