@@ -296,16 +296,50 @@ currentOS(){
     echo "$currentos" | tr A-Z a-z
 }
 
+# bk(){
+#     if (($# !=1));then
+#         echo "Usage: bk The_exist_file_or_directory" 1>&2
+#         return 1
+#     fi
+#     if [ ! -e "$f" ];then
+#         echo "$f does not exist!"
+#         return 2
+#     fi
+#     cp -n "$1" "$1.bak"
+# }
+
+#rotate backup
 bk(){
-    if (($# !=1));then
-        echo "Usage: bk The_exist_file_or_directory" 1>&2
+    if (($# < 1));then
+        echo "Usage: bk the_existing_file_or_directory [optional_max_number]"
         return 1
     fi
-    if [ ! -e "$f" ];then
-        echo "$f does not exist!"
+    local file="$1"
+    local maxNo="${2:-7}"
+    if [ ! -e "$file" ];then
+        echo "$file" does not exist!
         return 2
     fi
-    cp -n "$1" "$1.bak"
+    if ! echo "$maxNo" | grep '^[0-9]\+$' >/dev/null 2>&1;then
+        echo "optional_max_number must be number!"
+        return 3
+    fi
+    if (($maxNo<1));then
+        echo "optional_max_number must >= 1"
+        return 4
+    fi
+
+    rm -vf "${file}.${maxNo}" 2>/dev/null
+    ((maxNo--))
+    for i in $(seq "$maxNo" -1 1);do
+        ((j=i+1))
+        mv -v "${file}.${i}" "${file}.${j}" 2>/dev/null
+    done
+    mv -v "${file}" "${file}.1"
+}
+
+slientExe(){
+    eval "$@" >/dev/null 2>&1
 }
 
 godoc(){
