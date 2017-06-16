@@ -25,7 +25,7 @@ local highlight_bg=$bg[red]
 
 #{{vi indicator
 vim_ins_mode="%{$fg[cyan]%}[INS]%{$reset_color%}"
-vim_cmd_mode="%{$fg[green]%}[CMD]%{$reset_color%}"
+vim_cmd_mode="%{$fg[green]%}(CMD)%{$reset_color%}"
 vim_mode=$vim_ins_mode
 
 function zle-keymap-select {
