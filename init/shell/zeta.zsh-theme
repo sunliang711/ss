@@ -141,5 +141,5 @@ autoload -U add-zsh-hook
 add-zsh-hook precmd print_prompt_head
 setopt prompt_subst
 
-PROMPT='${vim_mode}$(get_prompt_indicator) '
+PROMPT='${vim_mode} $(get_prompt_indicator) '
 RPROMPT='$(git_prompt_short_sha) '
