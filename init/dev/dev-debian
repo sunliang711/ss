@@ -15,12 +15,19 @@ if command -v apt > /dev/null 2>&1;then
     installer=apt
 fi
 
-basicApps="sudo vim vim-gtk tree curl screenfetch zsh"
+basicApps="sudo vim vim-gtk tree curl screenfetch zsh openssh-server"
 devApps="build-essential cmake clang  python-apt python-dev python-pip python3-dev python3-pip libboost-all-dev golang golang-golang-x-tools ncurses-dev"
 
 $installer update -y
 read -p "Install development tools (ie:clang python boost golang)? [y/N] " -t 3 installDev
 read -p "Setup swap? [Y/n]" -t 3 setupSwap
+read -p "Whom to be add to sudo group?" -t 3 sudoer
+
+#TODO check $sudoer existence. if $sudoer does not exist?
+if [[ -n "$sudoer" ]];then
+    adduser $sudoer sudo
+fi
+
 for app in ${basicApps};do
     $installer install $app -y
 done
@@ -30,6 +37,7 @@ if [[ "$installDev" == [yY] ]];then
         $installer install $app -y
     done
 fi
+
 
 if [[ "$setupSwap" != [nN] ]];then
     SWAP=/var/swap.img
