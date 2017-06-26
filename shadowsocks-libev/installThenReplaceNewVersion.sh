@@ -18,7 +18,7 @@ if lsb_release -a 2>/dev/null | grep 'Debian' | grep -q 'jessie';then
     # cp ./make-bin/ss-redir /usr/bin/ss-redir
     # cp ./make-bin/ss-tunnel /usr/bin/ss-tunnel
 
-    local configDir="/etc/shadowsocks-libev"
+    configDir="/etc/shadowsocks-libev"
     cat<<EOF>"$configDir/config.json"
     {
         "server":"0.0.0.0",
@@ -29,4 +29,6 @@ if lsb_release -a 2>/dev/null | grep 'Debian' | grep -q 'jessie';then
         "timeout":60
     }
 EOF
+    systemctl start shadowsocks-libev
+    systemctl enable shadowsocks-libev
 fi
