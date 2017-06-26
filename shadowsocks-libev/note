@@ -1,0 +1,3 @@
+install.sh 通过apt安装shadowsocks-libev
+make-bin/ 目录中存放的是make.sh生成的可执行文件
+make.sh 通过编译方式安装shadowsocks-libev
