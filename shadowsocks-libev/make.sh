@@ -11,7 +11,7 @@ if (("$proxy"==1));then
 	alias curl='curl --socks5 "192.168.1.120:1080"'
 fi
 #sh -c 'printf "deb http://httpredir.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list'
-apt-get update
+apt-get update -y
 
 apt install -y curl gettext build-essential autoconf libtool libpcre3-dev asciidoc xmlto libev-dev libudns-dev automake git
 
@@ -26,9 +26,9 @@ cd shadowsocks-libev
 git submodule update --init --recursive
 cd ..
 
-apt-get remove libsodium*
+apt-get remove libsodium* -y
 
-apt purge libsodium*
+apt purge libsodium* -y
 
 curl  https://download.libsodium.org/libsodium/releases/libsodium-1.0.11.tar.gz -O
 
