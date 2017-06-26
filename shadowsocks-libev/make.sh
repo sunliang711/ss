@@ -61,6 +61,8 @@ cd shadowsocks-libev
 make install
 
 apt install -y rng-tools
+systemctl start rng-tools
+systemctl enable rng-tools
 
 local configDir="/etc/shadowsocks-libev"
 mkdir "$configDir"

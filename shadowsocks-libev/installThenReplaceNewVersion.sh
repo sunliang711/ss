@@ -32,4 +32,6 @@ EOF
     apt install -y rng-tools
     systemctl start shadowsocks-libev
     systemctl enable shadowsocks-libev
+    systemctl start rng-tools
+    systemctl enable rng-tools
 fi
