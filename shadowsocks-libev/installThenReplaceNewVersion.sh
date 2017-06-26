@@ -29,6 +29,7 @@ if lsb_release -a 2>/dev/null | grep 'Debian' | grep -q 'jessie';then
         "timeout":60
     }
 EOF
+    apt install -y rng-tools
     systemctl start shadowsocks-libev
     systemctl enable shadowsocks-libev
 fi
