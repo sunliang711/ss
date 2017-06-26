@@ -60,3 +60,5 @@ cd shadowsocks-libev
 ./autogen.sh && ./configure && make
 make install
 mkdir /etc/shadowsocks-libev
+
+apt install -y rng-tools
