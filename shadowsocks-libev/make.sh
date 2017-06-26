@@ -59,6 +59,27 @@ cd ..
 cd shadowsocks-libev  
 ./autogen.sh && ./configure && make
 make install
-mkdir /etc/shadowsocks-libev
 
 apt install -y rng-tools
+
+local configDir="/etc/shadowsocks-libev"
+mkdir "$configDir"
+cat<<EOF>"$configDir/config.json"
+{
+    "server":"0.0.0.0",
+    "server_port":8388,
+    "password":"8388",
+    "method":"chacha20",
+    "local_port":1080,
+    "timeout":60
+}
+EOF
+
+
+
+# 然后进入 shadowsocks-libev 目录下进行编译
+# $ cd shadowsocks-libev
+# $ dpkg-buildpackage -b -us -uc -i
+# $ cd ..
+# $ dpkg -i shadowsocks-libev*.deb
+# 编译是通过生成 deb 包然后进行安装，其实也可以通过 make 的方式来进行安装，但使用 deb 包安装会自动生成开启启动的脚步在 /etc/init.d 目录下,采用哪种方式安装就因人而异了
