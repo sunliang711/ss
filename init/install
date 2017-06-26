@@ -12,10 +12,10 @@ case $(uname) in
         elif command -v dnf >/dev/null 2>&1;then
             OS="Fedora"
         elif command -v apt-get >/dev/null 2>&1;then
-            if lsb_release -a |grep Debian >/dev/null 2>&1;then
-                Os="Debian"
+            if lsb_release -a 2>/dev/null |grep Debian >/dev/null 2>&1;then
+                OS="Debian"
             fi
-            if lsb_release -a |grep Ubuntu >/dev/null 2>&1;then
+            if lsb_release -a 2>/dev/null |grep Ubuntu >/dev/null 2>&1;then
                 OS="Ubuntu"
             fi
         fi
@@ -24,6 +24,7 @@ case $(uname) in
         echo "Not support your OS!"
         exit 1
 esac
+echo "OS: $OS"
 
 read -p "Install dev tools? [Y/n] " installDev
 read -p "Set proxy?(ie http_proxy https_proxy)[Y/n] " setProxy
