@@ -1,0 +1,2 @@
+install.sh 通过apt安装shadowsocks-libev
+make.sh 通过编译方式安装shadowsocks-libev

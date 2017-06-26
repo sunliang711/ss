@@ -1,4 +1,5 @@
 #!/bin/bash
+proxy=0
 if [[ "$1" == "-p" ]];then
 	proxy=1
 fi
