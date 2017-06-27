@@ -51,48 +51,59 @@ fi
 read -p "set iptables?[Y/n]: " setIptables
 if [[ "$setIptables" != [nN] ]];then
     iptablesRulesFile=/etc/iptables-rules
-    cat > "$iptablesRulesFile" <<-EOF
-    *filter
-    :INPUT DROP [0:0]
-    :FORWARD ACCEPT [0:0]
-    :OUTPUT ACCEPT [0:0]
-    -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-    -A INPUT -i lo -j ACCEPT
-    -A INPUT -p icmp -j ACCEPT
+    cat > "$iptablesRulesFile" <<EOF
+*filter
+:INPUT DROP [0:0]
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
 
-    #SSH port
-    -A INPUT -p tcp --dport 22 -j ACCEPT
+#SSH port
+-A INPUT -p tcp --dport 22 -j ACCEPT
 
-    #Shadowsocks port
-    -A INPUT -p tcp --dport 29573 -j ACCEPT
-    -A INPUT -p tcp --dport 39033 -j ACCEPT
-    -A INPUT -p tcp --dport 49682 -j ACCEPT
-    -A INPUT -p tcp --dport 8387 -j ACCEPT
-    -A INPUT -p tcp --dport 65454 -j ACCEPT
-    -A INPUT -p tcp --dport 3001 -j ACCEPT
-    -A INPUT -p tcp --dport 5050 -j ACCEPT
+#Shadowsocks port
+-A INPUT -p tcp --dport 29573 -j ACCEPT
+-A INPUT -p tcp --dport 39033 -j ACCEPT
+-A INPUT -p tcp --dport 49682 -j ACCEPT
+-A INPUT -p tcp --dport 8387 -j ACCEPT
+-A INPUT -p tcp --dport 65454 -j ACCEPT
+-A INPUT -p tcp --dport 3001 -j ACCEPT
+-A INPUT -p tcp --dport 5050 -j ACCEPT
 
-    #otherRule begin
-    #http port
-    -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
-    #https port
-    -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+#otherRule begin
+#http port
+-A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+#https port
+-A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
 
-    ##the following four rules are proxy basic for redirect
-    #http port
-    -A INPUT -p tcp -m tcp --sport 80 -j ACCEPT
-    #https port
-    -A INPUT -p tcp -m tcp --sport 443 -j ACCEPT
-    #DNS port
-    -A INPUT -p tcp -m tcp --sport 53 -j ACCEPT
-    -A INPUT -p udp -m udp --sport 53 -j ACCEPT
-    #otherRule end
-    COMMIT
-    EOF
-    iptablesScript=/etc/network/if-up.d/enableIptables.sh
-    cat > "$iptablesScript" <<-EOF
-    #!/bin/bash
-    /sbin/iptables-restore "$iptablesRulesFile"
-    EOF
-    chmod +x "${iptablesScript}"
+##the following four rules are proxy basic for redirect
+#http port
+-A INPUT -p tcp -m tcp --sport 80 -j ACCEPT
+#https port
+-A INPUT -p tcp -m tcp --sport 443 -j ACCEPT
+#DNS port
+-A INPUT -p tcp -m tcp --sport 53 -j ACCEPT
+-A INPUT -p udp -m udp --sport 53 -j ACCEPT
+#otherRule end
+COMMIT
+EOF
+    cat > /lib/systemd/system/iptables.service<<EOF
+[Unit]
+Description=iptables
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/sbin/iptables-restore /etc/iptables-rules
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload
+    systemctl start iptables.service
+    systemctl enable iptables.service
 fi
