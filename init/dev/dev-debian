@@ -41,15 +41,20 @@ fi
 
 if [[ "$setupSwap" != [nN] ]];then
     SWAP=/var/swap.img
-    dd if=/dev/zero of="$SWAP" bs=1024k count=1000
-    chmod 0600 "$SWAP"
-    mkswap "$SWAP"
-    swapon "$SWAP"
-    echo "$SWAP none swap sw 0 0">>/etc/fstab
+    if [[ ! -e "$SWAP" ]];then
+        dd if=/dev/zero of="$SWAP" bs=1024k count=1000
+        chmod 0600 "$SWAP"
+        mkswap "$SWAP"
+        swapon "$SWAP"
+        echo "$SWAP none swap sw 0 0">>/etc/fstab
+    else
+        echo "Already exist swap file."
+    fi
 fi
 
 read -p "set iptables?[Y/n]: " setIptables
 if [[ "$setIptables" != [nN] ]];then
+    systemctl stop iptables.service >/dev/null 2>&1
     iptablesRulesFile=/etc/iptables-rules
     cat > "$iptablesRulesFile" <<EOF
 *filter
@@ -89,6 +94,15 @@ if [[ "$setIptables" != [nN] ]];then
 #otherRule end
 COMMIT
 EOF
+    stopScript=/usr/local/bin/stop-iptables
+    cat > "$stopScript" <<EOF
+#!/bin/bash
+/sbin/iptables -F
+/sbin/iptables -P INPUT ACCEPT
+/sbin/iptables -P OUTPUT ACCEPT
+/sbin/iptables -P FORWARD ACCEPT
+EOF
+    chmod +x "$stopScript"
     cat > /lib/systemd/system/iptables.service<<EOF
 [Unit]
 Description=iptables
@@ -98,6 +112,8 @@ After=network.target
 Type=oneshot
 User=root
 ExecStart=/sbin/iptables-restore /etc/iptables-rules
+ExecReload=/sbin/iptables-restore /etc/iptables-rules
+ExecStop=$stopScript
 RemainAfterExit=yes
 
 [Install]
