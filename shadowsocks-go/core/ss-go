@@ -26,7 +26,7 @@ needRoot(){
 }
 start(){
     needRoot
-    exeName=${1:-"ss-server"}
+    exeName=${1:-"ss-server-go"}
     cfgName=${2:-"config.json"}
     cd "$exeDir"
     prgname=$(eval "\ls ${exeName}*")
@@ -48,15 +48,15 @@ start(){
 
 stop(){
     needRoot
-    pkill ss-server
+    pkill ss-server-go
     pkill max-server
 }
 
 status(){
     # pid=`ps -ef | grep ${prgname} | grep -v grep | awk '{print $2}'`
-    pid=$(pgrep ss-server)
+    pid=$(pgrep ss-server-go)
     if [ -n "$pid" ];then
-        echo "ss-server is running with pid: $pid"
+        echo "ss-server-go is running with pid: $pid"
     fi
     pid=$(pgrep max-server)
     if [ -n "$pid" ];then
@@ -71,7 +71,7 @@ config(){
         editor="vim"
     fi
     "$editor" "$configDir/config.json" "$configDir/max-config.json"
-    echo "You need restart ss-server." 
+    echo "You need restart ss-server-go." 
     read -p "Update firewall? [Y/n]" -t 10 fw
     if [[ "$fw" != [nN] ]];then
         fwOn
@@ -160,7 +160,7 @@ case "$1" in
 	#start ss-server config-chacha20.json
         #start max-server max-config.json
         status
-        fwOn
+        #fwOn
         ;;
     stop)
         stop

@@ -1,8 +1,0 @@
-{
-    "port_password":{
-	"9999":"99"
-    },
-    "method":"chacha20",
-    "timeout":60
-}
-

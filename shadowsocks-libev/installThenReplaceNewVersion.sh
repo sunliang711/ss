@@ -19,7 +19,7 @@ if lsb_release -a 2>/dev/null | grep 'Debian' | grep -q 'jessie';then
     # cp ./make-bin/ss-tunnel /usr/bin/ss-tunnel
 
     configDir="/etc/shadowsocks-libev"
-    cat<<EOF>"$configDir/config.json"
+    cat>"$configDir/config.json"<<EOF
     {
         "server":"0.0.0.0",
         "server_port":8388,
@@ -30,8 +30,43 @@ if lsb_release -a 2>/dev/null | grep 'Debian' | grep -q 'jessie';then
     }
 EOF
     apt install -y rng-tools
+    read -p "enable multi-port support?" multiport
+    if [[ "$multiport" == [yY] ]];then
+        while read -p "how many ports to add?" portcount;do
+            if echo "$portcount" | grep -qP '[^\d]';then
+                echo "input number:"
+            fi
+            break
+        done
+        root=/opt/shadowsocks-libev
+        mkdir -p "$root" >/dev/null 2>&1
+        for i in $(seq "$portcount");do
+            cp /etc/shadowsocks-libev/config.json "$root/config$i.json"
+        done
+
+        #modify /lib/systemd/system/shadowsocks-libev.service file
+        service_file=/lib/systemd/system/shadowsocks-libev.service
+        mv "${service_file}" "${service_file}.bak"
+        cp shadowsocks-libev.service "${service_file}"
+        cp ./ss_multi_port.sh "$root"
+        for i in $(seq "$portcount");do
+            echo "pidfile$i=\$pid_file_dir/ss_$i.pid" >> "$root/ss_multi_port.sh"
+        done
+
+        for i in $(seq "$portcount");do
+            echo "cfgfile$i=\$cfg_dir/config$i.json" >> "$root/ss_multi_port.sh"
+        done
+
+        for i in $(seq "$portcount");do
+            echo "/usr/bin/ss-server -a \$user_as -c \$cfgfile$i -f \$pidfile$i \$daemon_opt" >> "$root/ss_multi_port.sh"
+        done
+
+        echo "exit 0" >>"$root/ss_multi_port.sh"
+        systemctl daemon-reload
+    fi
     systemctl start shadowsocks-libev
     systemctl enable shadowsocks-libev
     systemctl start rng-tools
     systemctl enable rng-tools
 fi
+
