@@ -66,22 +66,22 @@ EOF
         mv "${service_file}" "${service_file}.bak"
         cp shadowsocks-libev.service "${service_file}"
         cp ./ss_multi_port.sh "$root"
-        for i in $(seq "$portcount");do
-            echo "pidfile$i=\$pid_file_dir/ss_$i.pid" >> "$root/ss_multi_port.sh"
-        done
-        echo >> "$root/ss_multi_port.sh"
+        # for i in $(seq "$portcount");do
+        #     echo "pidfile$i=\$pid_file_dir/ss_$i.pid" >> "$root/ss_multi_port.sh"
+        # done
+        # echo >> "$root/ss_multi_port.sh"
 
-        for i in $(seq "$portcount");do
-            echo "cfgfile$i=\$cfg_dir/config$i.json" >> "$root/ss_multi_port.sh"
-        done
-        echo >> "$root/ss_multi_port.sh"
+        # for i in $(seq "$portcount");do
+        #     echo "cfgfile$i=\$cfg_dir/config$i.json" >> "$root/ss_multi_port.sh"
+        # done
+        # echo >> "$root/ss_multi_port.sh"
 
-        for i in $(seq "$portcount");do
-            echo "/usr/bin/ss-server -a \$user_as -c \$cfgfile$i -f \$pidfile$i \$daemon_opt" >> "$root/ss_multi_port.sh"
-        done
-        echo >> "$root/ss_multi_port.sh"
+        # for i in $(seq "$portcount");do
+        #     echo "/usr/bin/ss-server -a \$user_as -c \$cfgfile$i -f \$pidfile$i \$daemon_opt" >> "$root/ss_multi_port.sh"
+        # done
+        # echo >> "$root/ss_multi_port.sh"
 
-        echo "exit 0" >>"$root/ss_multi_port.sh"
+        # echo "exit 0" >>"$root/ss_multi_port.sh"
         echo "install successfully!"
         systemctl daemon-reload
     fi

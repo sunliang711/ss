@@ -15,3 +15,12 @@ cfg_dir=/opt/shadowsocks-libev
 
 echo "start multi_port service:"
 
+#all file begin with config and end with .json can be used as a config file of an instance
+allCfgFiles=$(ls "$cfg_dir/config*.json")
+index=1
+for c in "$allCfgFiles";do
+    /usr/bin/ss-server -a $user_as -c $c -f "${pid_file_dir}/ss_${index}.pid" $daemon_opt
+    ((index+=1))
+done
+
+exit 0
