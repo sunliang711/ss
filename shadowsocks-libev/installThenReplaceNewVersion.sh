@@ -30,19 +30,36 @@ if lsb_release -a 2>/dev/null | grep 'Debian' | grep -q 'jessie';then
     }
 EOF
     apt install -y rng-tools
-    read -p "enable multi-port support?" multiport
-    if [[ "$multiport" == [yY] ]];then
-        while read -p "how many ports to add?" portcount;do
-            if echo "$portcount" | grep -qP '[^\d]';then
-                echo "input number:"
+    read -p "enable multi-port support? [Y/n]" multiport
+    if [[ "$multiport" != [nN] ]];then
+        while read -p "how many ports to add? [default:5]" portcount;do
+            if echo "$portcount" | grep -qP '^\s*\d*\s*$';then
+                break
             fi
-            break
+            echo "invalid number,retry :"
         done
+        if echo "$portcount" | grep -qP '^\s*$';then
+            portcount=5
+        fi
+        # read -p "how many ports to add? [default:5]" portcount
         root=/opt/shadowsocks-libev
+        if [ -d "$root" ];then
+            rm -rf "$root"
+        fi
         mkdir -p "$root" >/dev/null 2>&1
         for i in $(seq "$portcount");do
             cp /etc/shadowsocks-libev/config.json "$root/config$i.json"
         done
+        editor=vi
+        if command -v vim >/dev/null 2>&1;then
+            editor=vim
+        fi
+        read -p "edit config file" -t 2 xxyy
+        cmd="$editor"
+        for i in $(seq "$portcount");do
+            cmd="${cmd} $root/config$i.json"
+        done
+        eval "$cmd"
 
         #modify /lib/systemd/system/shadowsocks-libev.service file
         service_file=/lib/systemd/system/shadowsocks-libev.service
@@ -52,21 +69,29 @@ EOF
         for i in $(seq "$portcount");do
             echo "pidfile$i=\$pid_file_dir/ss_$i.pid" >> "$root/ss_multi_port.sh"
         done
+        echo >> "$root/ss_multi_port.sh"
 
         for i in $(seq "$portcount");do
             echo "cfgfile$i=\$cfg_dir/config$i.json" >> "$root/ss_multi_port.sh"
         done
+        echo >> "$root/ss_multi_port.sh"
 
         for i in $(seq "$portcount");do
             echo "/usr/bin/ss-server -a \$user_as -c \$cfgfile$i -f \$pidfile$i \$daemon_opt" >> "$root/ss_multi_port.sh"
         done
+        echo >> "$root/ss_multi_port.sh"
 
         echo "exit 0" >>"$root/ss_multi_port.sh"
+        echo "install successfully!"
         systemctl daemon-reload
     fi
+    echo "start shadowsocks-libev service..."
     systemctl start shadowsocks-libev
+    echo "enable shadowsocks-libev..."
     systemctl enable shadowsocks-libev
-    systemctl start rng-tools
+    echo "restart rng-tools service..."
+    systemctl restart rng-tools
+    echo "enabhle rng-tools"
     systemctl enable rng-tools
 fi
 
