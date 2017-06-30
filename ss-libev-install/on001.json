@@ -4,5 +4,7 @@
 	"password":"8388",
 	"method":"chacha20",
 	"local_port":1080,
+    "owner":"nobody",
+    "traffic_limit":"100",
 	"timeout":60
 }

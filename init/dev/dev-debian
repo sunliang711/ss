@@ -21,12 +21,12 @@ devApps="build-essential cmake clang  python-apt python-dev python-pip python3-d
 $installer update -y
 read -p "Install development tools (ie:clang python boost golang)? [y/N] " -t 3 installDev
 read -p "Setup swap? [Y/n]" -t 3 setupSwap
-read -p "Whom to be add to sudo group?" -t 3 sudoer
+# read -p "Whom to be add to sudo group?" -t 3 sudoer
 
-#TODO check $sudoer existence. if $sudoer does not exist?
-if [[ -n "$sudoer" ]];then
-    adduser $sudoer sudo
-fi
+# #TODO check $sudoer existence. if $sudoer does not exist?
+# if [[ -n "$sudoer" ]];then
+#     adduser $sudoer sudo
+# fi
 
 for app in ${basicApps};do
     $installer install $app -y

@@ -1,6 +1,7 @@
 #!/bin/bash
+#本脚本用于管理ss-libev端口配置，包括新增端口，修改端口，删除端口，查看所有端口
 root=/opt/ss-libev
-#TODO 新增或更新玩一个端口时，要检查冲突
+#TODO 新增或更新完一个端口时，要检查冲突
 
 list(){
 	allCfgFiles=$(ls ${root}/*.json)
@@ -12,24 +13,26 @@ list(){
 		password=$(grep 'password' $cfg | grep -oP ':.+' | grep -oP '(?<=")[^"]+(?=")')
 		method=$(grep 'method' $cfg | grep -oP ':.+' | grep -oP '(?<=")[^"]+(?=")')
 		owner=$(grep 'owner' $cfg | grep -oP ':.+' | grep -oP '(?<=")[^"]+(?=")')
+		trafficLimit=$(grep 'traffic_limit' $cfg | grep -oP ':.+' | grep -oP '(?<=")[^"]+(?=")')
         echo "*****************************************************************************" >>$msgfile
 		echo "cfg file is:$cfg" >> $msgfile
-		echo "**port:$port password:$password method:$method owner:$owner" >> $msgfile
+		echo "**port:$port password:$password method:$method owner:$owner trafficLimit:$trafficLimit" >> $msgfile
 	done
     less $msgfile
 }
 
 add(){
-	usage='usage: add port password owner(default:nobody) method(default:chacha20)'
+    usage='usage: add port password owner(default:nobody) method(default:chacha20) traffic_limit(default:100)'
 	port=$1
 	password=$2
 	owner=${3:-nobody}
 	method=${4:-chacha20}
+    trafficLimit=${5:-100}
 	if [ -z "$port" ] || [ -z "$password" ];then
 		echo "$usage"
 		exit 1 
 	fi
-	cfgfile=$(date +%s).json
+	cfgfile="on$(date +%s).json"
 	cat > $root/$cfgfile<<EOF
 {
 	"server":"0.0.0.0",
@@ -38,6 +41,7 @@ add(){
 	"method":"$method",
 	"local_port":1080,
 	"owner":"$owner",
+    "traffic_limit":"$trafficLimit",
 	"timeout":60
 }
 EOF
@@ -84,6 +88,46 @@ update(){
 
 }
 
+enable(){
+	usage="usage: enable port"
+	port=$1
+	if [ -z "$port" ];then
+		echo $usage
+		exit 1
+	fi
+	
+	allCfgFiles=$(ls ${root}/off*.json 2>/dev/null)
+	echo "allCfgFiles:$allCfgFiles"
+	for cfg in ${allCfgFiles};do
+		p=$(grep 'server_port' $cfg | grep -oP ':\s*\d+\s*,' | grep -oP '\d+')
+		if [ "$p" == "$port" ];then
+            mv $cfg ${cfg/off/on}
+            return 0
+		fi
+	done
+	echo "Not Found port:$port config file"
+}
+
+disable(){
+	usage="usage: disable port"
+	port=$1
+	if [ -z "$port" ];then
+		echo $usage
+		exit 1
+	fi
+	
+	allCfgFiles=$(ls ${root}/on*.json 2>/dev/null)
+	echo "allCfgFiles:$allCfgFiles"
+	for cfg in ${allCfgFiles};do
+		p=$(grep 'server_port' $cfg | grep -oP ':\s*\d+\s*,' | grep -oP '\d+')
+		if [ "$p" == "$port" ];then
+            mv $cfg ${cfg/on/off}
+            return 0
+		fi
+	done
+	echo "Not Found port:$port config file"
+}
+
 usage(){
 	echo "usage: $(basename $0) CMD [Parameters]"
 	echo "CMD:"
@@ -91,6 +135,8 @@ usage(){
     echo "     add port password owner(default:nobody) method(default chacha20)"
 	echo "     delete port"
 	echo "     update port"
+    echo "     enable port"
+    echo "     disable port"
 }
 
 warning(){
@@ -113,6 +159,12 @@ case $1 in
 		update $2
 		warning
 		;;
+    enable)
+        enable $2
+        ;;
+    disable)
+        disable $2
+        ;;
 	*)
 		usage
 		;;

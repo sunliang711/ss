@@ -1,4 +1,12 @@
 #!/bin/bash
+trafficDir=/opt/traffic
+[[ -d $trafficDir ]] || mkdir -p $trafficDir
+#关闭防火墙时，把被监控的OUTPUT流量输出到文件保存
+#设置监控的地方在ss-libev-rules中
+iptables -nvxLOUTPUT|grep spt:|while read line;do file=tcp$(echo $line | grep tcp | grep -oP '(?<=:)\d+'); echo "file:$file"; echo $line | awk '{print $2}' >$trafficDir/$file; done
+
+echo "Hi I'm stopping iptables.service" >/tmp/iptables.stop
+
 /sbin/iptables -F
 /sbin/iptables -P INPUT ACCEPT
 /sbin/iptables -P OUTPUT ACCEPT
