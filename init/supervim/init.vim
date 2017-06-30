@@ -170,7 +170,7 @@ Plug 'tpope/vim-endwise'
 Plug 'vim-scripts/DoxygenToolkit.vim'
 
 "vim-go
-Plug 'fatih/vim-go'
+" Plug 'fatih/vim-go'
 "better document viewer
 Plug 'garyburd/go-explorer'
 
@@ -181,7 +181,7 @@ else
     Plug 'Shougo/neocomplete.vim'
 endif
 
-Plug 'Valloric/YouCompleteMe'
+" Plug 'Valloric/YouCompleteMe'
 
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'

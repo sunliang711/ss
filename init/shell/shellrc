@@ -94,7 +94,6 @@ alias ss-local=/usr/local/share/ss-local/ss-local
 #BEGIN function
 if command -v git >/dev/null 2>&1;then
     ghclone(){
-        gpon
         p=${1:?"Usage: ghclone githubAccount/xx.git [newDir]"}
         if (($#>1));then
             newname=${2}
@@ -115,7 +114,7 @@ if command -v git >/dev/null 2>&1;then
     }
     gpon(){
         #add default parameter
-        local proxy=${1:-http://127.0.0.1:8118}
+        local proxy=${1:-http://localhost:8118}
 
         git config --global http.proxy $proxy
         git config --global https.proxy $proxy
