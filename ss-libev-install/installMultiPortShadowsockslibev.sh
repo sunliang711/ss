@@ -25,10 +25,13 @@ mkdir -p "$bindir" >/dev/null 2>&1
 cp ./ss-server "$bindir"
 cp ./manager.sh "$bindir"
 cp ./checkTraffic.sh "$bindir"
+cp ./clearTraffic.sh "$bindir"
 #delete job
 crontab -l 2>/dev/null|grep -v checkTraffic.sh|crontab -
+crontab -l 2>/dev/null|grep -v clearTraffic.sh|crontab -
 #add job
  (crontab -l 2>/dev/null;echo "*/10 * * * * /usr/local/bin/checkTraffic.sh")|crontab -
+ (crontab -l 2>/dev/null;echo "0 0 1 * * /usr/local/bin/clearTraffic.sh")|crontab -
 #environment file
 cp ./ss-libev.environment /etc/default
 
