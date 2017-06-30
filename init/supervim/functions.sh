@@ -3,9 +3,9 @@ usage(){
     echo "usage: $(basename $0) install [vim|nvim]"
     echo "       $(basename $0) uninstall [vim|nvim]" 
     echo "       $(basename $0) installYcm [vim|nvim]"
-    echo "       $(basename $0) installFont" 
-    echo "       $(basename $0) update  (for update vimrc or init.vim)"
     echo "       $(basename $0) installVimGo"
+    echo "       $(basename $0) installFont"
+    echo "       $(basename $0) update  (for update vimrc or init.vim)"
     exit 1
 }
 
@@ -141,7 +141,7 @@ installYcm(){
 install(){
     needCmd curl
     #installDependence
-    #安装vim还是nvim到配置
+    #安装vim还是nvim
     if (($#==0));then
         read -p "Install plugin for which? (vim/nvim)" vim
     else
@@ -205,30 +205,30 @@ install(){
 
     cp -v ./init.vim $cfgFile
 
-    #是否安装YouCompleteMe,默认不安装，5秒之内不输入y则不安装
-    read -p "Install YouCompleteMe?(Y/n): " -t 5 installycm
-    if [[ "$installycm" =~ [nN] ]];then
-        #comment ycm
-        sed -ibak "s/Plug 'Valloric\/YouCompleteMe'/\"&/" $cfgFile
-        \rm "${cfgFile}bak"
-    fi
-
-    read -p "Install vim-go? [Y/n]" -t 5 vimGo
-    if [[ "$vimGo" =~ [nN] ]];then
-        sed -ibak "s+Plug 'fatih/vim-go'+\"&+" $cfgFile
-        \rm "${cfgFile}bak"
-    fi
-
-    export GOPATH=~/Documents/go
     $vim +PlugInstall +qall
+    # read -p "Install YouCompleteMe?(y/n): " -t 5 installycm
+    # if [[ "$installycm" =~ [nN] ]];then
+    #     #comment ycm
+    #     sed -ibak "s/Plug 'Valloric\/YouCompleteMe'/\"&/" $cfgFile
+    #     \rm "${cfgFile}bak"
+    # fi
 
-    if [[ "$vimGo" != [nN] ]];then
-        $vim +GoInstallBinaries +qall
-    fi
-    #install YouCompleteMe
-    if [[ "$installycm" != [nN] ]];then
-        installYcm $vim
-    fi
+    # read -p "Install vim-go? [y/n]" -t 5 vimGo
+    # if [[ "$vimGo" =~ [nN] ]];then
+    #     sed -ibak "s+Plug 'fatih/vim-go'+\"&+" $cfgFile
+    #     \rm "${cfgFile}bak"
+    # fi
+
+    # export GOPATH=~/Documents/go
+    # $vim +PlugInstall +qall
+
+    # if [[ "$vimGo" != [nN] ]];then
+    #     $vim +GoInstallBinaries +qall
+    # fi
+    # #install YouCompleteMe
+    # if [[ "$installycm" != [nN] ]];then
+    #     installYcm $vim
+    # fi
 }
 
 uninstall(){
@@ -256,6 +256,7 @@ installVimGo(){
     fi
     sed -ibak "s+\"\(Plug 'fatih/vim-go'\)+\1/" $cfgFile
     \rm "${cfgFile}bak"
+    export GOPATH=~/Documents/go
 
     $vim PlugInstall +qall
     $vim GoInstallBinaries +qall

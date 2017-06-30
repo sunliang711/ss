@@ -53,7 +53,10 @@ install(){
     else
         echo "Install setting of $shell..."
         rc=/etc/shellrc
-        cp shellrc  $rc
+        if [ ! -e $rc ];then
+            echo "cp shellrc to $rc,need root privilege."
+            sudo cp shellrc  $rc
+        fi
         #insert header
         echo "$startLine" >> $cfgFile
 
@@ -90,8 +93,9 @@ uninstall(){
     #delete lines from header to tailer
     sed -ibak "/$startLine/,/$endLine/ d" $cfgFile
     rm ${cfgFile}bak
-    if [ -f $HOME/.custom-shell ];then
-        rm $HOME/.custom-shell
+    if [ -e /etc/shellrc ];then
+        echo "remove /etc/shellrc,need root privilege."
+        sudo rm /etc/shellrc
     fi
     echo "Done."
 }
