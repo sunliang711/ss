@@ -19,7 +19,7 @@ User=root
 Group=nogroup
 LimitNOFILE=32768
 PIDFile=/var/run/ss-libev/ss_0.pid
-ExecStart=/opt/shadowsocks-libev/ss-multi-port.sh $USER $CONFFILE $DAEMON_ARGS
+ExecStart=/opt/ss-libev/ss-multi-port.sh $USER $CONFFILE $DAEMON_ARGS
 
 [Install]
 WantedBy=multi-user.target

@@ -13,6 +13,10 @@ if [ -d "$root" ];then
 fi
 mkdir -p "$root"
 
+#config file
+cp ./config.json "$root"
+#apt install -y rng-tools
+
 #cp ss-server
 bindir=/usr/local/bin
 mkdir -p "$bindir" >/dev/null 2>&1
@@ -22,7 +26,8 @@ cp ./ss-server "$bindir"
 cp ./ss-libev.environment /etc/default
 
 #service file
-cp ./ss_multi_port.sh /lib/systemd/system
+cp ./ss-libev.service /lib/systemd/system
+cp ./ss-multi-port.sh "$root"
 
 systemctl daemon-reload
 systemctl restart ss-libev

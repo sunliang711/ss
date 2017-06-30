@@ -19,7 +19,6 @@ echo "start multi_port service:"
 allCfgFiles=$(ls $cfg_dir/config*.json)
 index=0
 for cfg in $allCfgFiles;do
-    echo $cfg
     /usr/local/bin/ss-server -a $user_as -c $cfg -f ${pid_file_dir}/ss_${index}.pid $daemon_opt
     ((index+=1))
 done
