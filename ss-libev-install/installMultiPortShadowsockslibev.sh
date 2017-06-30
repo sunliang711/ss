@@ -4,6 +4,8 @@ if (($EUID!=0));then
     echo "need root privilege!"
     exit 1
 fi
+apt update -y
+apt install -y libev-dev libudns-dev
 #stop service if exists
 systemctl stop ss-libev >/dev/null 2>&1
 
@@ -28,6 +30,10 @@ cp ./ss-libev.environment /etc/default
 #service file
 cp ./ss-libev.service /lib/systemd/system
 cp ./ss-multi-port.sh "$root"
+
+#shared library
+cp ./libmbedcrypto.so.0 /usr/local/lib/libmbedcrypto.so.0
+cp ./libsodium.so.18.1.1 /usr/lib/libsodium.so.18
 
 systemctl daemon-reload
 systemctl restart ss-libev
