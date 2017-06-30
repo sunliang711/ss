@@ -14,11 +14,13 @@ allOnCfg=$(ls $root/on*.json)
 for c in $allOnCfg;do
     port=$(grep 'server_port' $c | grep -oP '\d+')
     trafficLimit=$(grep 'traffic_limit' $c | grep -oP ':.+' | grep -oP '(?<=")[^"]+(?=")')
-    portTraffic=$(echo "$outputTraffic" | grep ":$port" | awk '{print $2}' )
+    portTraffic=$(echo "$outputTraffic" | grep tcp | grep ":$port" | awk '{print $2}' )
 
     #savedPortTraffic是重启iptables.service时保存在$trafficDir/目录下的端口流量
-    savedPortTraffic=$(cat $trafficDir/tcp$port)
-    ((portTraffic += savedPortTraffic))
+    if [ -e $trafficDir/tcp$port ];then
+        savedPortTraffic=$(cat $trafficDir/tcp$port)
+        ((portTraffic += savedPortTraffic))
+    fi
     echo "port:$port"
     echo "trafficLimit:$trafficLimit GB"
     echo "portTraffic:$portTraffic B"
