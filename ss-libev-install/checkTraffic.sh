@@ -13,7 +13,34 @@ outputTraffic=$(/sbin/iptables -n -v -x -L OUTPUT)
 allOnCfg=$(ls $root/on*.json)
 for c in $allOnCfg;do
     port=$(grep 'server_port' $c | grep -oP '\d+')
+    echo "port:$port"
     trafficLimit=$(grep 'traffic_limit' $c | grep -oP ':.+' | grep -oP '(?<=")[^"]+(?=")')
+    echo "trafficLimit:$trafficLimit"
+    #trafficLimit可能带有单位，比如B KB MB GB等等
+    trafficLimit=$(echo $trafficLimit | tr 'a-z' 'A-Z')
+    #数值部分
+    digitPart=$(echo $trafficLimit | grep -o '[0-9]\+')
+    #取得单位，支持KB MB GB
+    unitPart=$(echo $trafficLimit | grep -o '[A-Z]\+')
+    #不带单位则默认是GB
+    if [ -z "$unitPart" ];then
+        unitPart=GB
+    fi
+    case "$unitPart" in
+        B*)
+            trafficLimit=$digitPart
+        K*)
+            ((trafficLimit=digitPart*1024))
+            ;;
+        M*)
+            ((trafficLimit=digitPart*1024*1024))
+            ;;
+        G*)
+            ((trafficLimit=digitPart*1024*1024*1024))
+            ;;
+    esac
+
+
     portTraffic=$(echo "$outputTraffic" | grep tcp | grep ":$port" | awk '{print $2}' )
 
     #savedPortTraffic是重启iptables.service时保存在$trafficDir/目录下的端口流量
@@ -21,10 +48,8 @@ for c in $allOnCfg;do
         savedPortTraffic=$(cat $trafficDir/tcp$port)
         ((portTraffic += savedPortTraffic))
     fi
-    echo "port:$port"
-    echo "trafficLimit:$trafficLimit GB"
     echo "portTraffic:$portTraffic B"
-    if (($portTraffic >= $trafficLimit*1024*1024*1024));then
+    if (($portTraffic > $trafficLimit));then
         mv $c ${c/on/off}
         changed=1
         echo "changed"
@@ -33,4 +58,5 @@ done
 
 if (($changed==1));then
     systemctl restart ss-libev
+    systemctl restart iptables
 fi
