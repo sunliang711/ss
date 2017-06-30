@@ -8,10 +8,10 @@ if [ -d "$root" ];then
 fi
 mkdir -p "$root"
 
-pidfiledir=/var/run/frp
-if [ ! -d "$pidfiledir" ];then
-    mkdir "$pidfiledir"
-fi
+#pidfiledir=/var/run/frp
+#if [ ! -d "$pidfiledir" ];then
+    #mkdir "$pidfiledir"
+#fi
 
 #exe and config file
 cp -r ./frp-bin-linux64/* "$root"
@@ -23,15 +23,15 @@ Description=frps
 After=network.target
 
 [Service]
-Type=forking
-User=root
-PIDFile=$pidfiledir/frps.pid
+Type=simple
+#PIDFile=$pidfiledir/frps.pid
 ExecStart=$root/frps -c $root/frps.ini
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
+systemctl daemon-reload
 #start service
 systemctl start frps.service
 
