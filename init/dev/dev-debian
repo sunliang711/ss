@@ -58,6 +58,7 @@ setIptables(){
     rm -rf $root >/dev/null 2>&1
     mkdir -p $root
     cp ./apply-iptables.sh $root
+    cp ./ss-libev-rules $root
     cat > "$root/iptables.rules" <<EOF
 *filter
 :INPUT DROP [0:0]
@@ -126,7 +127,7 @@ EOF
 }
 
 case $1 in
-    iptables)
+    ip*|iptables)
         setIptables
         ;;
 esac
