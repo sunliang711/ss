@@ -3,5 +3,5 @@ root=/opt/ss-libev
 allCfg=$(ls $root/*.json)
 
 for cfg in $allCfg;do
-    grep '"server_port"' $cfg | grep -oP '\d+' | awk '{print "-A INPUT -p tcp -m tcp --dport $0 -j ACCEPT"}'
+    grep '"server_port"' $cfg | grep -oP '\d+' | awk '{print "-A INPUT -p tcp -m tcp --dport " $0 " -j ACCEPT"}'
 done
