@@ -23,6 +23,7 @@ cp ./config.json "$root"
 bindir=/usr/local/bin
 mkdir -p "$bindir" >/dev/null 2>&1
 cp ./ss-server "$bindir"
+cp ./manager.sh "$bindir"
 
 #environment file
 cp ./ss-libev.environment /etc/default
