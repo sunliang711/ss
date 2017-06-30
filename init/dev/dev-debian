@@ -126,8 +126,7 @@ EOF
     systemctl enable iptables.service
 }
 
-case $1 in
-    ip*|iptables)
-        setIptables
-        ;;
-esac
+read -p "set iptables? [Y/n] " setIp
+if [[ "$setIp" != [nN] ]];then
+    setIptables
+fi
