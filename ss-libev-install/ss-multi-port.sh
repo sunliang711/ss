@@ -15,7 +15,7 @@ root=/opt/ss-libev
 
 echo "start multi_port service:"
 
-#all file begin with config and end with .json can be used as a config file of an instance
+#all file begin with on and end with .json can be used as a config file of an instance
 allCfgFiles=$(ls $root/on*.json)
 index=0
 for cfg in $allCfgFiles;do

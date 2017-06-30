@@ -5,15 +5,23 @@ if (($EUID!=0));then
     exit 1
 fi
 
-cp -v /etc/security/limits.conf{,.bak}
-cat>>/etc/security/limits.conf<<EOF
-* soft nofile 51200
-* hard nofile 51200
-EOF
+limitfile=/etc/security/limits.conf
+limit=51200
+cp -v "$limitfile" "${limitfile}.bak"
+if ! grep -q '* soft nofile' "$limitfile" ;then
+    echo "* soft nofile $limit" >> "$limitfile"
+else
+    sed -ri "s/(^\*\s+soft\s+nofile\s+)[0-9]+/\1$limit/" "$limitfile"
+fi
+if ! grep -q '* hard nofile' "$limitfile" ;then
+    echo "* hard nofile $limit" >>"$limitfile"
+else
+    sed -ri "s/(^\*\s+hard\s+nofile\s+)[0-9]+/\1$limit/" "$limitfile"
+fi
 
 #backup
 cp -v /etc/sysctl.conf{,.bak}
-cat>>/etc/sysctl.conf<<EOF
+cat>/etc/sysctl.conf<<EOF
 fs.file-max = 51200
 net.ipv4.conf.lo.accept_redirects=0
 net.ipv4.conf.all.accept_redirects=0
@@ -30,7 +38,6 @@ net.ipv4.tcp_synack_retries = 2
 net.ipv4.tcp_syn_retries = 2
 net.ipv4.tcp_tw_reuse = 1
 net.ipv4.tcp_tw_recycle = 0
-net.ipv4.tcp_timestsmps = 0
 net.ipv4.tcp_tw_reuse = 1
 net.ipv4.tcp_max_tw_buckets = 9000
 net.ipv4.tcp_max_syn_backlog = 65536
