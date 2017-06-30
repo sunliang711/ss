@@ -56,7 +56,7 @@ delete(){
 		p=$(grep 'server_port' $cfg | grep -oP ':\s*\d+\s*,' | grep -oP '\d+')
 		if [ "$p" == "$port" ];then
 			rm $cfg
-			exit 0
+            break
 		fi
 	done
 	echo "Not Found port:$port config file"
@@ -77,7 +77,7 @@ update(){
 		p=$(grep 'server_port' $cfg | grep -oP ':\s*\d+\s*,' | grep -oP '\d+')
 		if [ "$p" == "$port" ];then
 			vi $cfg
-			exit 0
+            break
 		fi
 	done
 	echo "Not Found port:$port config file"

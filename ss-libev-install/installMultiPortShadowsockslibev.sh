@@ -38,5 +38,6 @@ cp ./libsodium.so.18.1.1 /usr/lib/libsodium.so.18
 
 systemctl daemon-reload
 systemctl restart ss-libev
+systemctl enable ss-libev
 
 
