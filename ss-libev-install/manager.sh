@@ -4,19 +4,19 @@ root=/opt/ss-libev
 
 list(){
 	allCfgFiles=$(ls ${root}/*.json)
+    msgfile=/tmp/manager-list-output
+    echo "Pager program is less." >$msgfile
 	for cfg in ${allCfgFiles};do
 		port=$(grep 'server_port' $cfg | grep -oP ':.+' | grep -oP '\d+')
 		#port=$(grep 'server_port' $cfg | grep -oP ':\s*\d+\s*,' | grep -oP '\d+')
 		password=$(grep 'password' $cfg | grep -oP ':.+' | grep -oP '(?<=")[^"]+(?=")')
 		method=$(grep 'method' $cfg | grep -oP ':.+' | grep -oP '(?<=")[^"]+(?=")')
 		owner=$(grep 'owner' $cfg | grep -oP ':.+' | grep -oP '(?<=")[^"]+(?=")')
-		echo "****************************************************************"
-		echo "cfg file is:$cfg"
-		echo "port:$port"
-		echo "password:$password"
-		echo "method:$method"
-		echo "owner:$owner"
+        echo "*****************************************************************************" >>$msgfile
+		echo "cfg file is:$cfg" >> $msgfile
+		echo "**port:$port password:$password method:$method owner:$owner" >> $msgfile
 	done
+    less $msgfile
 }
 
 add(){
