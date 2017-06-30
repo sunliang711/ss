@@ -88,7 +88,7 @@ usage(){
 	echo "usage: $(basename $0) CMD [Parameters]"
 	echo "CMD:"
 	echo "     list"
-	echo "     add port password method(default chacha20)"
+    echo "     add port password owner(default:nobody) method(default chacha20)"
 	echo "     delete port"
 	echo "     update port"
 }
