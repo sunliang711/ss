@@ -52,12 +52,13 @@ install(){
         exit 1
     else
         echo "Install setting of $shell..."
-        cp custom-shell  ~/.custom-shell
+        rc=/etc/shellrc
+        cp shellrc  $rc
         #insert header
         echo "$startLine" >> $cfgFile
 
         #insert body
-        echo "[ -f ~/.custom-shell ] && source ~/.custom-shell" >> $cfgFile
+        echo "[ -f $rc ] && source $rc" >> $cfgFile
 
         #insert tailer
         echo "$endLine" >> $cfgFile
