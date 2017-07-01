@@ -97,11 +97,12 @@ enable(){
 	fi
 	
 	allCfgFiles=$(ls ${root}/off*.json 2>/dev/null)
-	echo "allCfgFiles:$allCfgFiles"
 	for cfg in ${allCfgFiles};do
 		p=$(grep 'server_port' $cfg | grep -oP ':\s*\d+\s*,' | grep -oP '\d+')
 		if [ "$p" == "$port" ];then
             mv $cfg ${cfg/off/on}
+            systemctl restart iptables
+            systemctl restart ss-libev
             return 0
 		fi
 	done
