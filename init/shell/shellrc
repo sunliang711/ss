@@ -371,20 +371,16 @@ traffic(){
 		echo "need iptables command"
 		return 1
 	fi
-	#默认显示输出流量
-	inOrOut=${1:-OUTPUT}
-    #支持小写字母形式
-    inOrOut=$(echo $inOrOut | tr a-z A-Z)
-    whichPort=$2
+    whichPort=$1
     if [ -z "$whichPort" ];then
-        iptables -nvL $inOrOut
+        msg=$(iptables -nvL OUTPUT)
     else
-        msg=$(iptables -nvL $inOrOut | grep ":$whichPort")
-        if [ -z "$msg" ];then
-            echo "Cannot find $whichPort network traffic"
-        else
-            echo "$msg"
-        fi
+        msg=$(iptables -nvL OUTPUT | grep ":$whichPort")
+    fi
+    if [ -z "$msg" ];then
+        echo "Can't find port $whichPort traffic"
+    else
+        echo "$msg"|grep -v Chain|grep -v pkts|awk '{print $3 " " $10 "  " $2}'|sed 's/spt/port/'
     fi
 }
 #END function
