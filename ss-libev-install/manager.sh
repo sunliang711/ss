@@ -45,6 +45,7 @@ add(){
 	"timeout":60
 }
 EOF
+    restart
 }
 
 delete(){
@@ -60,6 +61,7 @@ delete(){
 		p=$(grep 'server_port' $cfg | grep -oP ':\s*\d+\s*,' | grep -oP '\d+')
 		if [ "$p" == "$port" ];then
 			rm $cfg
+            restart
             return 0
 		fi
 	done
@@ -101,8 +103,7 @@ enable(){
 		p=$(grep 'server_port' $cfg | grep -oP ':\s*\d+\s*,' | grep -oP '\d+')
 		if [ "$p" == "$port" ];then
             mv $cfg ${cfg/off/on}
-            systemctl restart iptables
-            systemctl restart ss-libev
+            restart
             return 0
 		fi
 	done
@@ -123,6 +124,7 @@ disable(){
 		p=$(grep 'server_port' $cfg | grep -oP ':\s*\d+\s*,' | grep -oP '\d+')
 		if [ "$p" == "$port" ];then
             mv $cfg ${cfg/on/off}
+            restart
             return 0
 		fi
 	done
@@ -142,6 +144,11 @@ usage(){
 
 warning(){
 	echo "Warning: Don't forget to update iptables and restart ss-libev service"
+}
+
+restart(){
+    systemctl restart iptables
+    systemctl restart ss-libev
 }
 
 case $1 in
