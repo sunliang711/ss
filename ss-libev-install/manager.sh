@@ -18,6 +18,7 @@ list(){
 		echo "cfg file is:$cfg" >> $msgfile
 		echo "**port:$port password:$password method:$method owner:$owner trafficLimit:$trafficLimit" >> $msgfile
 	done
+    export LESSCHARSET=utf-8
     less $msgfile
 }
 
