@@ -364,6 +364,29 @@ pgrep(){
     name=${1}
     ps aux | grep "${name}" | grep -v grep
 }
+
+#流量统计输出
+traffic(){
+	if ! command -v iptables >/dev/null 2>&1;then
+		echo "need iptables command"
+		return 1
+	fi
+	#默认显示输出流量
+	inOrOut=${1:-OUTPUT}
+    #支持小写字母形式
+    inOrOut=$(echo $inOrOut | tr a-z A-Z)
+    whichPort=$2
+    if [ -z "$whichPort" ];then
+        iptables -nvL $inOrOut
+    else
+        msg=$(iptables -nvL $inOrOut | grep ":$whichPort")
+        if [ -z "$msg" ];then
+            echo "Cannot find $whichPort network traffic"
+        else
+            echo "$msg"
+        fi
+    fi
+}
 #END function
 
 #BEGIN others
