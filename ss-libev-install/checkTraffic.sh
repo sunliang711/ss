@@ -29,6 +29,7 @@ for c in $allOnCfg;do
     case "$unitPart" in
         B*)
             trafficLimit=$digitPart
+            ;;
         K*)
             ((trafficLimit=digitPart*1024))
             ;;
