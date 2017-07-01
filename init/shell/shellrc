@@ -17,6 +17,9 @@ if command -v clang++ >/dev/null 2>&1;then
     export CXX=$(command -v clang++)
 fi
 
+#解决git log乱码
+#因为git log调用less命令
+export LESSCHARSET=utf-8
 #END environment variable
 
 
