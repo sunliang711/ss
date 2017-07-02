@@ -40,8 +40,8 @@ cp ./ss-libev.service /lib/systemd/system
 cp ./ss-multi-port.sh "$root"
 
 #shared library
-cp ./libmbedcrypto.so.0 /usr/local/lib/libmbedcrypto.so.0
-cp ./libsodium.so.18.1.1 /usr/lib/libsodium.so.18
+cp ./lib/libmbedcrypto.so* /usr/local/lib
+cp ./lib/libsodium.so* /usr/local/lib
 
 ldconfig
 systemctl daemon-reload
