@@ -40,9 +40,10 @@ cp ./ss-libev.service /lib/systemd/system
 cp ./ss-multi-port.sh "$root"
 
 #shared library
-cp ./libmbedcrypto.so.0 /usr/lib/libmbedcrypto.so.0
+cp ./libmbedcrypto.so.0 /usr/local/lib/libmbedcrypto.so.0
 cp ./libsodium.so.18.1.1 /usr/lib/libsodium.so.18
 
+ldconfig
 systemctl daemon-reload
 systemctl restart ss-libev
 systemctl enable ss-libev
